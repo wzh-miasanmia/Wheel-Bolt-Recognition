@@ -59,4 +59,5 @@ We provide the following functionalities:
 
 
 ## Results
-![Test Result](outputs/vis/gb_image_00000.png)
+
+![Test Result](outputs/vis/rgb_image_00000.png)
