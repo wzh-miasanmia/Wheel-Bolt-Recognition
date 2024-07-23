@@ -1,6 +1,6 @@
 # Wheel Bolt Recognition
 
-Hello, welcome to the wheel_bolt_recognition project! The project was realized during a working student at the Chair of Materials Handling, Material Flow, Logistics of the Technical University of Munich.
+Hello, welcome to the wheel_bolt_recognition project! The project was realized during a working student at the Chair of Materials Handling, Material Flow, Logistics of the Technical University of Munich. Due to data security, the relevant data is not uploaded, only the relevant code is uploaded.
 
 ## Purpose
 
