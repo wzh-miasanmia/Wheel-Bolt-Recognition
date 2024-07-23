@@ -57,7 +57,3 @@ We provide the following functionalities:
 7. **Visualization of the test dataset:**
     - have a look at the results in the outputs/vis folder
 
-
-## Results
-
-![Test Result](outputs/vis/rgb_image_00000.png)
