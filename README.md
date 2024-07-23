@@ -58,3 +58,5 @@ We provide the following functionalities:
     - have a look at the results in the outputs/vis folder
 
 
+## Results
+![Test Result](outputs/vis/gb_image_00000.png)
