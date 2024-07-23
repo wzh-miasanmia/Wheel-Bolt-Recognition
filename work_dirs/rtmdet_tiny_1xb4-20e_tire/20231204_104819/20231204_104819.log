@@ -1,0 +1,1891 @@
+2023/12/04 10:48:19 - mmengine - INFO - 
+------------------------------------------------------------
+System environment:
+    sys.platform: linux
+    Python: 3.8.18 (default, Sep 11 2023, 13:40:15) [GCC 11.2.0]
+    CUDA available: True
+    numpy_random_seed: 1141116962
+    GPU 0: NVIDIA GeForce RTX 3060 Ti
+    CUDA_HOME: /path/to/your/cuda
+    GCC: gcc (Ubuntu 9.4.0-1ubuntu1~20.04.2) 9.4.0
+    PyTorch: 2.1.1+cu121
+    PyTorch compiling details: PyTorch built with:
+  - GCC 9.3
+  - C++ Version: 201703
+  - Intel(R) oneAPI Math Kernel Library Version 2023.1-Product Build 20230303 for Intel(R) 64 architecture applications
+  - Intel(R) MKL-DNN v3.1.1 (Git Hash 64f6bcbcbab628e96f33a62c3e975f8535a7bde4)
+  - OpenMP 201511 (a.k.a. OpenMP 4.5)
+  - LAPACK is enabled (usually provided by MKL)
+  - NNPACK is enabled
+  - CPU capability usage: AVX2
+  - CUDA Runtime 12.1
+  - NVCC architecture flags: -gencode;arch=compute_50,code=sm_50;-gencode;arch=compute_60,code=sm_60;-gencode;arch=compute_70,code=sm_70;-gencode;arch=compute_75,code=sm_75;-gencode;arch=compute_80,code=sm_80;-gencode;arch=compute_86,code=sm_86;-gencode;arch=compute_90,code=sm_90
+  - CuDNN 8.9.2
+  - Magma 2.6.1
+  - Build settings: BLAS_INFO=mkl, BUILD_TYPE=Release, CUDA_VERSION=12.1, CUDNN_VERSION=8.9.2, CXX_COMPILER=/opt/rh/devtoolset-9/root/usr/bin/c++, CXX_FLAGS= -D_GLIBCXX_USE_CXX11_ABI=0 -fabi-version=11 -fvisibility-inlines-hidden -DUSE_PTHREADPOOL -DNDEBUG -DUSE_KINETO -DLIBKINETO_NOROCTRACER -DUSE_FBGEMM -DUSE_QNNPACK -DUSE_PYTORCH_QNNPACK -DUSE_XNNPACK -DSYMBOLICATE_MOBILE_DEBUG_HANDLE -O2 -fPIC -Wall -Wextra -Werror=return-type -Werror=non-virtual-dtor -Werror=bool-operation -Wnarrowing -Wno-missing-field-initializers -Wno-type-limits -Wno-array-bounds -Wno-unknown-pragmas -Wno-unused-parameter -Wno-unused-function -Wno-unused-result -Wno-strict-overflow -Wno-strict-aliasing -Wno-stringop-overflow -Wno-psabi -Wno-error=pedantic -Wno-error=old-style-cast -Wno-invalid-partial-specialization -Wno-unused-private-field -Wno-aligned-allocation-unavailable -Wno-missing-braces -fdiagnostics-color=always -faligned-new -Wno-unused-but-set-variable -Wno-maybe-uninitialized -fno-math-errno -fno-trapping-math -Werror=format -Werror=cast-function-type -Wno-stringop-overflow, LAPACK_INFO=mkl, PERF_WITH_AVX=1, PERF_WITH_AVX2=1, PERF_WITH_AVX512=1, TORCH_DISABLE_GPU_ASSERTS=ON, TORCH_VERSION=2.1.1, USE_CUDA=ON, USE_CUDNN=ON, USE_EXCEPTION_PTR=1, USE_GFLAGS=OFF, USE_GLOG=OFF, USE_MKL=ON, USE_MKLDNN=ON, USE_MPI=OFF, USE_NCCL=1, USE_NNPACK=ON, USE_OPENMP=ON, USE_ROCM=OFF, 
+
+    TorchVision: 0.16.1+cu121
+    OpenCV: 4.7.0
+    MMEngine: 0.9.0
+
+Runtime environment:
+    cudnn_benchmark: False
+    dist_cfg: {'backend': 'nccl'}
+    mp_cfg: {'mp_start_method': 'fork', 'opencv_num_threads': 0}
+    seed: 1141116962
+    Distributed launcher: none
+    Distributed training: False
+    GPU number: 1
+------------------------------------------------------------
+
+2023/12/04 10:48:20 - mmengine - INFO - Config:
+auto_scale_lr = dict(base_batch_size=16, enable=False)
+backend_args = None
+base_lr = 8e-05
+checkpoint = 'https://download.openmmlab.com/mmdetection/v3.0/rtmdet/cspnext_rsb_pretrain/cspnext-tiny_imagenet_600e.pth'
+custom_hooks = [
+    dict(
+        switch_epoch=39,
+        switch_pipeline=[
+            dict(backend_args=None, type='LoadImageFromFile'),
+            dict(type='LoadAnnotations', with_bbox=True),
+            dict(
+                keep_ratio=True,
+                ratio_range=(
+                    0.1,
+                    2.0,
+                ),
+                scale=(
+                    640,
+                    640,
+                ),
+                type='RandomResize'),
+            dict(crop_size=(
+                640,
+                640,
+            ), type='RandomCrop'),
+            dict(type='YOLOXHSVRandomAug'),
+            dict(prob=0.5, type='RandomFlip'),
+            dict(
+                pad_val=dict(img=(
+                    114,
+                    114,
+                    114,
+                )),
+                size=(
+                    640,
+                    640,
+                ),
+                type='Pad'),
+            dict(type='PackDetInputs'),
+        ],
+        type='PipelineSwitchHook'),
+]
+data_root = 'data/'
+dataset_type = 'CocoDataset'
+default_hooks = dict(
+    checkpoint=dict(
+        interval=5, max_keep_ckpts=2, save_best='auto', type='CheckpointHook'),
+    logger=dict(interval=5, type='LoggerHook'),
+    param_scheduler=dict(type='ParamSchedulerHook'),
+    sampler_seed=dict(type='DistSamplerSeedHook'),
+    timer=dict(type='IterTimerHook'),
+    visualization=dict(type='DetVisualizationHook'))
+default_scope = 'mmdet'
+env_cfg = dict(
+    cudnn_benchmark=False,
+    dist_cfg=dict(backend='nccl'),
+    mp_cfg=dict(mp_start_method='fork', opencv_num_threads=0))
+img_scales = [
+    (
+        640,
+        640,
+    ),
+    (
+        320,
+        320,
+    ),
+    (
+        960,
+        960,
+    ),
+]
+interval = 10
+launcher = 'none'
+load_from = './checkpoints/rtmdet_tiny_8xb32-300e_coco_20220902_112414-78e30dcc.pth'
+log_level = 'INFO'
+log_processor = dict(by_epoch=True, type='LogProcessor', window_size=50)
+max_epochs = 40
+metainfo = dict(classes=('screw', ))
+model = dict(
+    backbone=dict(
+        act_cfg=dict(inplace=True, type='SiLU'),
+        arch='P5',
+        channel_attention=True,
+        deepen_factor=0.167,
+        expand_ratio=0.5,
+        init_cfg=dict(
+            checkpoint=
+            'https://download.openmmlab.com/mmdetection/v3.0/rtmdet/cspnext_rsb_pretrain/cspnext-tiny_imagenet_600e.pth',
+            prefix='backbone.',
+            type='Pretrained'),
+        norm_cfg=dict(type='SyncBN'),
+        type='CSPNeXt',
+        widen_factor=0.375),
+    bbox_head=dict(
+        act_cfg=dict(inplace=True, type='SiLU'),
+        anchor_generator=dict(
+            offset=0, strides=[
+                8,
+                16,
+                32,
+            ], type='MlvlPointGenerator'),
+        bbox_coder=dict(type='DistancePointBBoxCoder'),
+        exp_on_reg=False,
+        feat_channels=96,
+        in_channels=96,
+        loss_bbox=dict(loss_weight=2.0, type='GIoULoss'),
+        loss_cls=dict(
+            beta=2.0,
+            loss_weight=1.0,
+            type='QualityFocalLoss',
+            use_sigmoid=True),
+        norm_cfg=dict(type='SyncBN'),
+        num_classes=1,
+        pred_kernel_size=1,
+        share_conv=True,
+        stacked_convs=2,
+        type='RTMDetSepBNHead',
+        with_objectness=False),
+    data_preprocessor=dict(
+        batch_augments=None,
+        bgr_to_rgb=False,
+        mean=[
+            103.53,
+            116.28,
+            123.675,
+        ],
+        std=[
+            57.375,
+            57.12,
+            58.395,
+        ],
+        type='DetDataPreprocessor'),
+    neck=dict(
+        act_cfg=dict(inplace=True, type='SiLU'),
+        expand_ratio=0.5,
+        in_channels=[
+            96,
+            192,
+            384,
+        ],
+        norm_cfg=dict(type='SyncBN'),
+        num_csp_blocks=1,
+        out_channels=96,
+        type='CSPNeXtPAFPN'),
+    test_cfg=dict(
+        max_per_img=300,
+        min_bbox_size=0,
+        nms=dict(iou_threshold=0.65, type='nms'),
+        nms_pre=30000,
+        score_thr=0.001),
+    train_cfg=dict(
+        allowed_border=-1,
+        assigner=dict(topk=13, type='DynamicSoftLabelAssigner'),
+        debug=False,
+        pos_weight=-1),
+    type='RTMDet')
+optim_wrapper = dict(
+    optimizer=dict(lr=8e-05, type='AdamW', weight_decay=0.05),
+    paramwise_cfg=dict(
+        bias_decay_mult=0, bypass_duplicate=True, norm_decay_mult=0),
+    type='OptimWrapper')
+param_scheduler = [
+    dict(begin=0, by_epoch=False, end=10, start_factor=1e-05, type='LinearLR'),
+    dict(
+        T_max=20,
+        begin=20,
+        by_epoch=True,
+        convert_to_iter_based=True,
+        end=40,
+        eta_min=4.000000000000001e-06,
+        type='CosineAnnealingLR'),
+]
+resume = False
+stage2_num_epochs = 1
+test_cfg = dict(type='TestLoop')
+test_dataloader = dict(
+    batch_size=5,
+    dataset=dict(
+        ann_file='val.json',
+        backend_args=None,
+        data_prefix=dict(img='val/'),
+        data_root='data/',
+        metainfo=dict(classes=('screw', )),
+        pipeline=[
+            dict(backend_args=None, type='LoadImageFromFile'),
+            dict(keep_ratio=True, scale=(
+                640,
+                640,
+            ), type='Resize'),
+            dict(
+                pad_val=dict(img=(
+                    114,
+                    114,
+                    114,
+                )),
+                size=(
+                    640,
+                    640,
+                ),
+                type='Pad'),
+            dict(type='LoadAnnotations', with_bbox=True),
+            dict(
+                meta_keys=(
+                    'img_id',
+                    'img_path',
+                    'ori_shape',
+                    'img_shape',
+                    'scale_factor',
+                ),
+                type='PackDetInputs'),
+        ],
+        test_mode=True,
+        type='CocoDataset'),
+    drop_last=False,
+    num_workers=10,
+    persistent_workers=True,
+    sampler=dict(shuffle=False, type='DefaultSampler'))
+test_evaluator = dict(
+    ann_file='data/val.json',
+    backend_args=None,
+    format_only=False,
+    metric='bbox',
+    proposal_nums=(
+        100,
+        1,
+        10,
+    ),
+    type='CocoMetric')
+test_pipeline = [
+    dict(backend_args=None, type='LoadImageFromFile'),
+    dict(keep_ratio=True, scale=(
+        640,
+        640,
+    ), type='Resize'),
+    dict(pad_val=dict(img=(
+        114,
+        114,
+        114,
+    )), size=(
+        640,
+        640,
+    ), type='Pad'),
+    dict(type='LoadAnnotations', with_bbox=True),
+    dict(
+        meta_keys=(
+            'img_id',
+            'img_path',
+            'ori_shape',
+            'img_shape',
+            'scale_factor',
+        ),
+        type='PackDetInputs'),
+]
+train_batch_size_per_gpu = 4
+train_cfg = dict(
+    dynamic_intervals=[
+        (
+            280,
+            1,
+        ),
+    ],
+    max_epochs=40,
+    type='EpochBasedTrainLoop',
+    val_interval=1)
+train_dataloader = dict(
+    batch_sampler=None,
+    batch_size=4,
+    dataset=dict(
+        ann_file='train.json',
+        backend_args=None,
+        data_prefix=dict(img='train/'),
+        data_root='data/',
+        filter_cfg=dict(filter_empty_gt=True, min_size=32),
+        metainfo=dict(classes=('screw', )),
+        pipeline=[
+            dict(backend_args=None, type='LoadImageFromFile'),
+            dict(type='LoadAnnotations', with_bbox=True),
+            dict(
+                img_scale=(
+                    640,
+                    640,
+                ),
+                max_cached_images=20,
+                pad_val=114.0,
+                random_pop=False,
+                type='CachedMosaic'),
+            dict(
+                keep_ratio=True,
+                ratio_range=(
+                    0.5,
+                    2.0,
+                ),
+                scale=(
+                    1280,
+                    1280,
+                ),
+                type='RandomResize'),
+            dict(crop_size=(
+                640,
+                640,
+            ), type='RandomCrop'),
+            dict(type='YOLOXHSVRandomAug'),
+            dict(prob=0.5, type='RandomFlip'),
+            dict(
+                pad_val=dict(img=(
+                    114,
+                    114,
+                    114,
+                )),
+                size=(
+                    640,
+                    640,
+                ),
+                type='Pad'),
+            dict(
+                img_scale=(
+                    640,
+                    640,
+                ),
+                max_cached_images=10,
+                pad_val=(
+                    114,
+                    114,
+                    114,
+                ),
+                prob=0.5,
+                random_pop=False,
+                ratio_range=(
+                    1.0,
+                    1.0,
+                ),
+                type='CachedMixUp'),
+            dict(type='PackDetInputs'),
+        ],
+        type='CocoDataset'),
+    num_workers=2,
+    persistent_workers=True,
+    pin_memory=True,
+    sampler=dict(shuffle=True, type='DefaultSampler'))
+train_num_workers = 2
+train_pipeline = [
+    dict(backend_args=None, type='LoadImageFromFile'),
+    dict(type='LoadAnnotations', with_bbox=True),
+    dict(
+        img_scale=(
+            640,
+            640,
+        ),
+        max_cached_images=20,
+        pad_val=114.0,
+        random_pop=False,
+        type='CachedMosaic'),
+    dict(
+        keep_ratio=True,
+        ratio_range=(
+            0.5,
+            2.0,
+        ),
+        scale=(
+            1280,
+            1280,
+        ),
+        type='RandomResize'),
+    dict(crop_size=(
+        640,
+        640,
+    ), type='RandomCrop'),
+    dict(type='YOLOXHSVRandomAug'),
+    dict(prob=0.5, type='RandomFlip'),
+    dict(pad_val=dict(img=(
+        114,
+        114,
+        114,
+    )), size=(
+        640,
+        640,
+    ), type='Pad'),
+    dict(
+        img_scale=(
+            640,
+            640,
+        ),
+        max_cached_images=10,
+        pad_val=(
+            114,
+            114,
+            114,
+        ),
+        prob=0.5,
+        random_pop=False,
+        ratio_range=(
+            1.0,
+            1.0,
+        ),
+        type='CachedMixUp'),
+    dict(type='PackDetInputs'),
+]
+train_pipeline_stage2 = [
+    dict(backend_args=None, type='LoadImageFromFile'),
+    dict(type='LoadAnnotations', with_bbox=True),
+    dict(
+        keep_ratio=True,
+        ratio_range=(
+            0.1,
+            2.0,
+        ),
+        scale=(
+            640,
+            640,
+        ),
+        type='RandomResize'),
+    dict(crop_size=(
+        640,
+        640,
+    ), type='RandomCrop'),
+    dict(type='YOLOXHSVRandomAug'),
+    dict(prob=0.5, type='RandomFlip'),
+    dict(pad_val=dict(img=(
+        114,
+        114,
+        114,
+    )), size=(
+        640,
+        640,
+    ), type='Pad'),
+    dict(type='PackDetInputs'),
+]
+tta_model = dict(
+    tta_cfg=dict(max_per_img=100, nms=dict(iou_threshold=0.6, type='nms')),
+    type='DetTTAModel')
+tta_pipeline = [
+    dict(backend_args=None, type='LoadImageFromFile'),
+    dict(
+        transforms=[
+            [
+                dict(keep_ratio=True, scale=(
+                    640,
+                    640,
+                ), type='Resize'),
+                dict(keep_ratio=True, scale=(
+                    320,
+                    320,
+                ), type='Resize'),
+                dict(keep_ratio=True, scale=(
+                    960,
+                    960,
+                ), type='Resize'),
+            ],
+            [
+                dict(prob=1.0, type='RandomFlip'),
+                dict(prob=0.0, type='RandomFlip'),
+            ],
+            [
+                dict(
+                    pad_val=dict(img=(
+                        114,
+                        114,
+                        114,
+                    )),
+                    size=(
+                        960,
+                        960,
+                    ),
+                    type='Pad'),
+            ],
+            [
+                dict(type='LoadAnnotations', with_bbox=True),
+            ],
+            [
+                dict(
+                    meta_keys=(
+                        'img_id',
+                        'img_path',
+                        'ori_shape',
+                        'img_shape',
+                        'scale_factor',
+                        'flip',
+                        'flip_direction',
+                    ),
+                    type='PackDetInputs'),
+            ],
+        ],
+        type='TestTimeAug'),
+]
+val_cfg = dict(type='ValLoop')
+val_dataloader = dict(
+    batch_size=5,
+    dataset=dict(
+        ann_file='val.json',
+        backend_args=None,
+        data_prefix=dict(img='val/'),
+        data_root='data/',
+        metainfo=dict(classes=('screw', )),
+        pipeline=[
+            dict(backend_args=None, type='LoadImageFromFile'),
+            dict(keep_ratio=True, scale=(
+                640,
+                640,
+            ), type='Resize'),
+            dict(
+                pad_val=dict(img=(
+                    114,
+                    114,
+                    114,
+                )),
+                size=(
+                    640,
+                    640,
+                ),
+                type='Pad'),
+            dict(type='LoadAnnotations', with_bbox=True),
+            dict(
+                meta_keys=(
+                    'img_id',
+                    'img_path',
+                    'ori_shape',
+                    'img_shape',
+                    'scale_factor',
+                ),
+                type='PackDetInputs'),
+        ],
+        test_mode=True,
+        type='CocoDataset'),
+    drop_last=False,
+    num_workers=10,
+    persistent_workers=True,
+    sampler=dict(shuffle=False, type='DefaultSampler'))
+val_evaluator = dict(
+    ann_file='data/val.json',
+    backend_args=None,
+    format_only=False,
+    metric='bbox',
+    proposal_nums=(
+        100,
+        1,
+        10,
+    ),
+    type='CocoMetric')
+vis_backends = [
+    dict(type='LocalVisBackend'),
+]
+visualizer = dict(
+    name='visualizer',
+    type='DetLocalVisualizer',
+    vis_backends=[
+        dict(type='LocalVisBackend'),
+        dict(type='TensorboardVisBackend'),
+    ])
+work_dir = './work_dirs/rtmdet_tiny_1xb4-20e_tire'
+
+2023/12/04 10:48:25 - mmengine - INFO - Distributed training is not used, all SyncBatchNorm (SyncBN) layers in the model will be automatically reverted to BatchNormXd layers if they are used.
+2023/12/04 10:48:25 - mmengine - INFO - Hooks will be executed in the following order:
+before_run:
+(VERY_HIGH   ) RuntimeInfoHook                    
+(BELOW_NORMAL) LoggerHook                         
+ -------------------- 
+before_train:
+(VERY_HIGH   ) RuntimeInfoHook                    
+(NORMAL      ) IterTimerHook                      
+(VERY_LOW    ) CheckpointHook                     
+ -------------------- 
+before_train_epoch:
+(VERY_HIGH   ) RuntimeInfoHook                    
+(NORMAL      ) IterTimerHook                      
+(NORMAL      ) DistSamplerSeedHook                
+(NORMAL      ) PipelineSwitchHook                 
+ -------------------- 
+before_train_iter:
+(VERY_HIGH   ) RuntimeInfoHook                    
+(NORMAL      ) IterTimerHook                      
+ -------------------- 
+after_train_iter:
+(VERY_HIGH   ) RuntimeInfoHook                    
+(NORMAL      ) IterTimerHook                      
+(BELOW_NORMAL) LoggerHook                         
+(LOW         ) ParamSchedulerHook                 
+(VERY_LOW    ) CheckpointHook                     
+ -------------------- 
+after_train_epoch:
+(NORMAL      ) IterTimerHook                      
+(LOW         ) ParamSchedulerHook                 
+(VERY_LOW    ) CheckpointHook                     
+ -------------------- 
+before_val:
+(VERY_HIGH   ) RuntimeInfoHook                    
+ -------------------- 
+before_val_epoch:
+(NORMAL      ) IterTimerHook                      
+ -------------------- 
+before_val_iter:
+(NORMAL      ) IterTimerHook                      
+ -------------------- 
+after_val_iter:
+(NORMAL      ) IterTimerHook                      
+(NORMAL      ) DetVisualizationHook               
+(BELOW_NORMAL) LoggerHook                         
+ -------------------- 
+after_val_epoch:
+(VERY_HIGH   ) RuntimeInfoHook                    
+(NORMAL      ) IterTimerHook                      
+(BELOW_NORMAL) LoggerHook                         
+(LOW         ) ParamSchedulerHook                 
+(VERY_LOW    ) CheckpointHook                     
+ -------------------- 
+after_val:
+(VERY_HIGH   ) RuntimeInfoHook                    
+ -------------------- 
+after_train:
+(VERY_HIGH   ) RuntimeInfoHook                    
+(VERY_LOW    ) CheckpointHook                     
+ -------------------- 
+before_test:
+(VERY_HIGH   ) RuntimeInfoHook                    
+ -------------------- 
+before_test_epoch:
+(NORMAL      ) IterTimerHook                      
+ -------------------- 
+before_test_iter:
+(NORMAL      ) IterTimerHook                      
+ -------------------- 
+after_test_iter:
+(NORMAL      ) IterTimerHook                      
+(NORMAL      ) DetVisualizationHook               
+(BELOW_NORMAL) LoggerHook                         
+ -------------------- 
+after_test_epoch:
+(VERY_HIGH   ) RuntimeInfoHook                    
+(NORMAL      ) IterTimerHook                      
+(BELOW_NORMAL) LoggerHook                         
+ -------------------- 
+after_test:
+(VERY_HIGH   ) RuntimeInfoHook                    
+ -------------------- 
+after_run:
+(BELOW_NORMAL) LoggerHook                         
+ -------------------- 
+2023/12/04 10:48:26 - mmengine - INFO - paramwise_options -- backbone.stem.0.bn.weight:weight_decay=0.0
+2023/12/04 10:48:26 - mmengine - INFO - paramwise_options -- backbone.stem.0.bn.bias:weight_decay=0.0
+2023/12/04 10:48:26 - mmengine - INFO - paramwise_options -- backbone.stem.1.bn.weight:weight_decay=0.0
+2023/12/04 10:48:26 - mmengine - INFO - paramwise_options -- backbone.stem.1.bn.bias:weight_decay=0.0
+2023/12/04 10:48:26 - mmengine - INFO - paramwise_options -- backbone.stem.2.bn.weight:weight_decay=0.0
+2023/12/04 10:48:26 - mmengine - INFO - paramwise_options -- backbone.stem.2.bn.bias:weight_decay=0.0
+2023/12/04 10:48:26 - mmengine - INFO - paramwise_options -- backbone.stage1.0.bn.weight:weight_decay=0.0
+2023/12/04 10:48:26 - mmengine - INFO - paramwise_options -- backbone.stage1.0.bn.bias:weight_decay=0.0
+2023/12/04 10:48:26 - mmengine - INFO - paramwise_options -- backbone.stage1.1.main_conv.bn.weight:weight_decay=0.0
+2023/12/04 10:48:26 - mmengine - INFO - paramwise_options -- backbone.stage1.1.main_conv.bn.bias:weight_decay=0.0
+2023/12/04 10:48:26 - mmengine - INFO - paramwise_options -- backbone.stage1.1.short_conv.bn.weight:weight_decay=0.0
+2023/12/04 10:48:26 - mmengine - INFO - paramwise_options -- backbone.stage1.1.short_conv.bn.bias:weight_decay=0.0
+2023/12/04 10:48:26 - mmengine - INFO - paramwise_options -- backbone.stage1.1.final_conv.bn.weight:weight_decay=0.0
+2023/12/04 10:48:26 - mmengine - INFO - paramwise_options -- backbone.stage1.1.final_conv.bn.bias:weight_decay=0.0
+2023/12/04 10:48:26 - mmengine - INFO - paramwise_options -- backbone.stage1.1.blocks.0.conv1.bn.weight:weight_decay=0.0
+2023/12/04 10:48:26 - mmengine - INFO - paramwise_options -- backbone.stage1.1.blocks.0.conv1.bn.bias:weight_decay=0.0
+2023/12/04 10:48:26 - mmengine - INFO - paramwise_options -- backbone.stage1.1.blocks.0.conv2.depthwise_conv.bn.weight:weight_decay=0.0
+2023/12/04 10:48:26 - mmengine - INFO - paramwise_options -- backbone.stage1.1.blocks.0.conv2.depthwise_conv.bn.bias:weight_decay=0.0
+2023/12/04 10:48:26 - mmengine - INFO - paramwise_options -- backbone.stage1.1.blocks.0.conv2.pointwise_conv.bn.weight:weight_decay=0.0
+2023/12/04 10:48:26 - mmengine - INFO - paramwise_options -- backbone.stage1.1.blocks.0.conv2.pointwise_conv.bn.bias:weight_decay=0.0
+2023/12/04 10:48:26 - mmengine - INFO - paramwise_options -- backbone.stage1.1.attention.fc.bias:weight_decay=0.0
+2023/12/04 10:48:26 - mmengine - INFO - paramwise_options -- backbone.stage2.0.bn.weight:weight_decay=0.0
+2023/12/04 10:48:26 - mmengine - INFO - paramwise_options -- backbone.stage2.0.bn.bias:weight_decay=0.0
+2023/12/04 10:48:26 - mmengine - INFO - paramwise_options -- backbone.stage2.1.main_conv.bn.weight:weight_decay=0.0
+2023/12/04 10:48:26 - mmengine - INFO - paramwise_options -- backbone.stage2.1.main_conv.bn.bias:weight_decay=0.0
+2023/12/04 10:48:26 - mmengine - INFO - paramwise_options -- backbone.stage2.1.short_conv.bn.weight:weight_decay=0.0
+2023/12/04 10:48:26 - mmengine - INFO - paramwise_options -- backbone.stage2.1.short_conv.bn.bias:weight_decay=0.0
+2023/12/04 10:48:26 - mmengine - INFO - paramwise_options -- backbone.stage2.1.final_conv.bn.weight:weight_decay=0.0
+2023/12/04 10:48:26 - mmengine - INFO - paramwise_options -- backbone.stage2.1.final_conv.bn.bias:weight_decay=0.0
+2023/12/04 10:48:26 - mmengine - INFO - paramwise_options -- backbone.stage2.1.blocks.0.conv1.bn.weight:weight_decay=0.0
+2023/12/04 10:48:26 - mmengine - INFO - paramwise_options -- backbone.stage2.1.blocks.0.conv1.bn.bias:weight_decay=0.0
+2023/12/04 10:48:26 - mmengine - INFO - paramwise_options -- backbone.stage2.1.blocks.0.conv2.depthwise_conv.bn.weight:weight_decay=0.0
+2023/12/04 10:48:26 - mmengine - INFO - paramwise_options -- backbone.stage2.1.blocks.0.conv2.depthwise_conv.bn.bias:weight_decay=0.0
+2023/12/04 10:48:26 - mmengine - INFO - paramwise_options -- backbone.stage2.1.blocks.0.conv2.pointwise_conv.bn.weight:weight_decay=0.0
+2023/12/04 10:48:26 - mmengine - INFO - paramwise_options -- backbone.stage2.1.blocks.0.conv2.pointwise_conv.bn.bias:weight_decay=0.0
+2023/12/04 10:48:26 - mmengine - INFO - paramwise_options -- backbone.stage2.1.attention.fc.bias:weight_decay=0.0
+2023/12/04 10:48:26 - mmengine - INFO - paramwise_options -- backbone.stage3.0.bn.weight:weight_decay=0.0
+2023/12/04 10:48:26 - mmengine - INFO - paramwise_options -- backbone.stage3.0.bn.bias:weight_decay=0.0
+2023/12/04 10:48:26 - mmengine - INFO - paramwise_options -- backbone.stage3.1.main_conv.bn.weight:weight_decay=0.0
+2023/12/04 10:48:26 - mmengine - INFO - paramwise_options -- backbone.stage3.1.main_conv.bn.bias:weight_decay=0.0
+2023/12/04 10:48:26 - mmengine - INFO - paramwise_options -- backbone.stage3.1.short_conv.bn.weight:weight_decay=0.0
+2023/12/04 10:48:26 - mmengine - INFO - paramwise_options -- backbone.stage3.1.short_conv.bn.bias:weight_decay=0.0
+2023/12/04 10:48:26 - mmengine - INFO - paramwise_options -- backbone.stage3.1.final_conv.bn.weight:weight_decay=0.0
+2023/12/04 10:48:26 - mmengine - INFO - paramwise_options -- backbone.stage3.1.final_conv.bn.bias:weight_decay=0.0
+2023/12/04 10:48:26 - mmengine - INFO - paramwise_options -- backbone.stage3.1.blocks.0.conv1.bn.weight:weight_decay=0.0
+2023/12/04 10:48:26 - mmengine - INFO - paramwise_options -- backbone.stage3.1.blocks.0.conv1.bn.bias:weight_decay=0.0
+2023/12/04 10:48:26 - mmengine - INFO - paramwise_options -- backbone.stage3.1.blocks.0.conv2.depthwise_conv.bn.weight:weight_decay=0.0
+2023/12/04 10:48:26 - mmengine - INFO - paramwise_options -- backbone.stage3.1.blocks.0.conv2.depthwise_conv.bn.bias:weight_decay=0.0
+2023/12/04 10:48:26 - mmengine - INFO - paramwise_options -- backbone.stage3.1.blocks.0.conv2.pointwise_conv.bn.weight:weight_decay=0.0
+2023/12/04 10:48:26 - mmengine - INFO - paramwise_options -- backbone.stage3.1.blocks.0.conv2.pointwise_conv.bn.bias:weight_decay=0.0
+2023/12/04 10:48:26 - mmengine - INFO - paramwise_options -- backbone.stage3.1.attention.fc.bias:weight_decay=0.0
+2023/12/04 10:48:26 - mmengine - INFO - paramwise_options -- backbone.stage4.0.bn.weight:weight_decay=0.0
+2023/12/04 10:48:26 - mmengine - INFO - paramwise_options -- backbone.stage4.0.bn.bias:weight_decay=0.0
+2023/12/04 10:48:26 - mmengine - INFO - paramwise_options -- backbone.stage4.1.conv1.bn.weight:weight_decay=0.0
+2023/12/04 10:48:26 - mmengine - INFO - paramwise_options -- backbone.stage4.1.conv1.bn.bias:weight_decay=0.0
+2023/12/04 10:48:26 - mmengine - INFO - paramwise_options -- backbone.stage4.1.conv2.bn.weight:weight_decay=0.0
+2023/12/04 10:48:26 - mmengine - INFO - paramwise_options -- backbone.stage4.1.conv2.bn.bias:weight_decay=0.0
+2023/12/04 10:48:26 - mmengine - INFO - paramwise_options -- backbone.stage4.2.main_conv.bn.weight:weight_decay=0.0
+2023/12/04 10:48:26 - mmengine - INFO - paramwise_options -- backbone.stage4.2.main_conv.bn.bias:weight_decay=0.0
+2023/12/04 10:48:26 - mmengine - INFO - paramwise_options -- backbone.stage4.2.short_conv.bn.weight:weight_decay=0.0
+2023/12/04 10:48:26 - mmengine - INFO - paramwise_options -- backbone.stage4.2.short_conv.bn.bias:weight_decay=0.0
+2023/12/04 10:48:26 - mmengine - INFO - paramwise_options -- backbone.stage4.2.final_conv.bn.weight:weight_decay=0.0
+2023/12/04 10:48:26 - mmengine - INFO - paramwise_options -- backbone.stage4.2.final_conv.bn.bias:weight_decay=0.0
+2023/12/04 10:48:26 - mmengine - INFO - paramwise_options -- backbone.stage4.2.blocks.0.conv1.bn.weight:weight_decay=0.0
+2023/12/04 10:48:26 - mmengine - INFO - paramwise_options -- backbone.stage4.2.blocks.0.conv1.bn.bias:weight_decay=0.0
+2023/12/04 10:48:26 - mmengine - INFO - paramwise_options -- backbone.stage4.2.blocks.0.conv2.depthwise_conv.bn.weight:weight_decay=0.0
+2023/12/04 10:48:26 - mmengine - INFO - paramwise_options -- backbone.stage4.2.blocks.0.conv2.depthwise_conv.bn.bias:weight_decay=0.0
+2023/12/04 10:48:26 - mmengine - INFO - paramwise_options -- backbone.stage4.2.blocks.0.conv2.pointwise_conv.bn.weight:weight_decay=0.0
+2023/12/04 10:48:26 - mmengine - INFO - paramwise_options -- backbone.stage4.2.blocks.0.conv2.pointwise_conv.bn.bias:weight_decay=0.0
+2023/12/04 10:48:26 - mmengine - INFO - paramwise_options -- backbone.stage4.2.attention.fc.bias:weight_decay=0.0
+2023/12/04 10:48:26 - mmengine - INFO - paramwise_options -- neck.reduce_layers.0.bn.weight:weight_decay=0.0
+2023/12/04 10:48:26 - mmengine - INFO - paramwise_options -- neck.reduce_layers.0.bn.bias:weight_decay=0.0
+2023/12/04 10:48:26 - mmengine - INFO - paramwise_options -- neck.reduce_layers.1.bn.weight:weight_decay=0.0
+2023/12/04 10:48:26 - mmengine - INFO - paramwise_options -- neck.reduce_layers.1.bn.bias:weight_decay=0.0
+2023/12/04 10:48:26 - mmengine - INFO - paramwise_options -- neck.top_down_blocks.0.main_conv.bn.weight:weight_decay=0.0
+2023/12/04 10:48:26 - mmengine - INFO - paramwise_options -- neck.top_down_blocks.0.main_conv.bn.bias:weight_decay=0.0
+2023/12/04 10:48:26 - mmengine - INFO - paramwise_options -- neck.top_down_blocks.0.short_conv.bn.weight:weight_decay=0.0
+2023/12/04 10:48:26 - mmengine - INFO - paramwise_options -- neck.top_down_blocks.0.short_conv.bn.bias:weight_decay=0.0
+2023/12/04 10:48:26 - mmengine - INFO - paramwise_options -- neck.top_down_blocks.0.final_conv.bn.weight:weight_decay=0.0
+2023/12/04 10:48:26 - mmengine - INFO - paramwise_options -- neck.top_down_blocks.0.final_conv.bn.bias:weight_decay=0.0
+2023/12/04 10:48:26 - mmengine - INFO - paramwise_options -- neck.top_down_blocks.0.blocks.0.conv1.bn.weight:weight_decay=0.0
+2023/12/04 10:48:26 - mmengine - INFO - paramwise_options -- neck.top_down_blocks.0.blocks.0.conv1.bn.bias:weight_decay=0.0
+2023/12/04 10:48:26 - mmengine - INFO - paramwise_options -- neck.top_down_blocks.0.blocks.0.conv2.depthwise_conv.bn.weight:weight_decay=0.0
+2023/12/04 10:48:26 - mmengine - INFO - paramwise_options -- neck.top_down_blocks.0.blocks.0.conv2.depthwise_conv.bn.bias:weight_decay=0.0
+2023/12/04 10:48:26 - mmengine - INFO - paramwise_options -- neck.top_down_blocks.0.blocks.0.conv2.pointwise_conv.bn.weight:weight_decay=0.0
+2023/12/04 10:48:26 - mmengine - INFO - paramwise_options -- neck.top_down_blocks.0.blocks.0.conv2.pointwise_conv.bn.bias:weight_decay=0.0
+2023/12/04 10:48:26 - mmengine - INFO - paramwise_options -- neck.top_down_blocks.1.main_conv.bn.weight:weight_decay=0.0
+2023/12/04 10:48:26 - mmengine - INFO - paramwise_options -- neck.top_down_blocks.1.main_conv.bn.bias:weight_decay=0.0
+2023/12/04 10:48:26 - mmengine - INFO - paramwise_options -- neck.top_down_blocks.1.short_conv.bn.weight:weight_decay=0.0
+2023/12/04 10:48:26 - mmengine - INFO - paramwise_options -- neck.top_down_blocks.1.short_conv.bn.bias:weight_decay=0.0
+2023/12/04 10:48:26 - mmengine - INFO - paramwise_options -- neck.top_down_blocks.1.final_conv.bn.weight:weight_decay=0.0
+2023/12/04 10:48:26 - mmengine - INFO - paramwise_options -- neck.top_down_blocks.1.final_conv.bn.bias:weight_decay=0.0
+2023/12/04 10:48:26 - mmengine - INFO - paramwise_options -- neck.top_down_blocks.1.blocks.0.conv1.bn.weight:weight_decay=0.0
+2023/12/04 10:48:26 - mmengine - INFO - paramwise_options -- neck.top_down_blocks.1.blocks.0.conv1.bn.bias:weight_decay=0.0
+2023/12/04 10:48:26 - mmengine - INFO - paramwise_options -- neck.top_down_blocks.1.blocks.0.conv2.depthwise_conv.bn.weight:weight_decay=0.0
+2023/12/04 10:48:26 - mmengine - INFO - paramwise_options -- neck.top_down_blocks.1.blocks.0.conv2.depthwise_conv.bn.bias:weight_decay=0.0
+2023/12/04 10:48:26 - mmengine - INFO - paramwise_options -- neck.top_down_blocks.1.blocks.0.conv2.pointwise_conv.bn.weight:weight_decay=0.0
+2023/12/04 10:48:26 - mmengine - INFO - paramwise_options -- neck.top_down_blocks.1.blocks.0.conv2.pointwise_conv.bn.bias:weight_decay=0.0
+2023/12/04 10:48:26 - mmengine - INFO - paramwise_options -- neck.downsamples.0.bn.weight:weight_decay=0.0
+2023/12/04 10:48:26 - mmengine - INFO - paramwise_options -- neck.downsamples.0.bn.bias:weight_decay=0.0
+2023/12/04 10:48:26 - mmengine - INFO - paramwise_options -- neck.downsamples.1.bn.weight:weight_decay=0.0
+2023/12/04 10:48:26 - mmengine - INFO - paramwise_options -- neck.downsamples.1.bn.bias:weight_decay=0.0
+2023/12/04 10:48:26 - mmengine - INFO - paramwise_options -- neck.bottom_up_blocks.0.main_conv.bn.weight:weight_decay=0.0
+2023/12/04 10:48:26 - mmengine - INFO - paramwise_options -- neck.bottom_up_blocks.0.main_conv.bn.bias:weight_decay=0.0
+2023/12/04 10:48:26 - mmengine - INFO - paramwise_options -- neck.bottom_up_blocks.0.short_conv.bn.weight:weight_decay=0.0
+2023/12/04 10:48:26 - mmengine - INFO - paramwise_options -- neck.bottom_up_blocks.0.short_conv.bn.bias:weight_decay=0.0
+2023/12/04 10:48:26 - mmengine - INFO - paramwise_options -- neck.bottom_up_blocks.0.final_conv.bn.weight:weight_decay=0.0
+2023/12/04 10:48:26 - mmengine - INFO - paramwise_options -- neck.bottom_up_blocks.0.final_conv.bn.bias:weight_decay=0.0
+2023/12/04 10:48:26 - mmengine - INFO - paramwise_options -- neck.bottom_up_blocks.0.blocks.0.conv1.bn.weight:weight_decay=0.0
+2023/12/04 10:48:26 - mmengine - INFO - paramwise_options -- neck.bottom_up_blocks.0.blocks.0.conv1.bn.bias:weight_decay=0.0
+2023/12/04 10:48:26 - mmengine - INFO - paramwise_options -- neck.bottom_up_blocks.0.blocks.0.conv2.depthwise_conv.bn.weight:weight_decay=0.0
+2023/12/04 10:48:26 - mmengine - INFO - paramwise_options -- neck.bottom_up_blocks.0.blocks.0.conv2.depthwise_conv.bn.bias:weight_decay=0.0
+2023/12/04 10:48:26 - mmengine - INFO - paramwise_options -- neck.bottom_up_blocks.0.blocks.0.conv2.pointwise_conv.bn.weight:weight_decay=0.0
+2023/12/04 10:48:26 - mmengine - INFO - paramwise_options -- neck.bottom_up_blocks.0.blocks.0.conv2.pointwise_conv.bn.bias:weight_decay=0.0
+2023/12/04 10:48:26 - mmengine - INFO - paramwise_options -- neck.bottom_up_blocks.1.main_conv.bn.weight:weight_decay=0.0
+2023/12/04 10:48:26 - mmengine - INFO - paramwise_options -- neck.bottom_up_blocks.1.main_conv.bn.bias:weight_decay=0.0
+2023/12/04 10:48:26 - mmengine - INFO - paramwise_options -- neck.bottom_up_blocks.1.short_conv.bn.weight:weight_decay=0.0
+2023/12/04 10:48:26 - mmengine - INFO - paramwise_options -- neck.bottom_up_blocks.1.short_conv.bn.bias:weight_decay=0.0
+2023/12/04 10:48:26 - mmengine - INFO - paramwise_options -- neck.bottom_up_blocks.1.final_conv.bn.weight:weight_decay=0.0
+2023/12/04 10:48:26 - mmengine - INFO - paramwise_options -- neck.bottom_up_blocks.1.final_conv.bn.bias:weight_decay=0.0
+2023/12/04 10:48:26 - mmengine - INFO - paramwise_options -- neck.bottom_up_blocks.1.blocks.0.conv1.bn.weight:weight_decay=0.0
+2023/12/04 10:48:26 - mmengine - INFO - paramwise_options -- neck.bottom_up_blocks.1.blocks.0.conv1.bn.bias:weight_decay=0.0
+2023/12/04 10:48:26 - mmengine - INFO - paramwise_options -- neck.bottom_up_blocks.1.blocks.0.conv2.depthwise_conv.bn.weight:weight_decay=0.0
+2023/12/04 10:48:26 - mmengine - INFO - paramwise_options -- neck.bottom_up_blocks.1.blocks.0.conv2.depthwise_conv.bn.bias:weight_decay=0.0
+2023/12/04 10:48:26 - mmengine - INFO - paramwise_options -- neck.bottom_up_blocks.1.blocks.0.conv2.pointwise_conv.bn.weight:weight_decay=0.0
+2023/12/04 10:48:26 - mmengine - INFO - paramwise_options -- neck.bottom_up_blocks.1.blocks.0.conv2.pointwise_conv.bn.bias:weight_decay=0.0
+2023/12/04 10:48:26 - mmengine - INFO - paramwise_options -- neck.out_convs.0.bn.weight:weight_decay=0.0
+2023/12/04 10:48:26 - mmengine - INFO - paramwise_options -- neck.out_convs.0.bn.bias:weight_decay=0.0
+2023/12/04 10:48:26 - mmengine - INFO - paramwise_options -- neck.out_convs.1.bn.weight:weight_decay=0.0
+2023/12/04 10:48:26 - mmengine - INFO - paramwise_options -- neck.out_convs.1.bn.bias:weight_decay=0.0
+2023/12/04 10:48:26 - mmengine - INFO - paramwise_options -- neck.out_convs.2.bn.weight:weight_decay=0.0
+2023/12/04 10:48:26 - mmengine - INFO - paramwise_options -- neck.out_convs.2.bn.bias:weight_decay=0.0
+2023/12/04 10:48:26 - mmengine - INFO - paramwise_options -- bbox_head.cls_convs.0.0.bn.weight:weight_decay=0.0
+2023/12/04 10:48:26 - mmengine - INFO - paramwise_options -- bbox_head.cls_convs.0.0.bn.bias:weight_decay=0.0
+2023/12/04 10:48:26 - mmengine - INFO - paramwise_options -- bbox_head.cls_convs.0.1.bn.weight:weight_decay=0.0
+2023/12/04 10:48:26 - mmengine - INFO - paramwise_options -- bbox_head.cls_convs.0.1.bn.bias:weight_decay=0.0
+2023/12/04 10:48:26 - mmengine - WARNING - bbox_head.cls_convs.1.0.conv is duplicate. It is skipped since bypass_duplicate=True
+2023/12/04 10:48:26 - mmengine - INFO - paramwise_options -- bbox_head.cls_convs.1.0.bn.weight:weight_decay=0.0
+2023/12/04 10:48:26 - mmengine - INFO - paramwise_options -- bbox_head.cls_convs.1.0.bn.bias:weight_decay=0.0
+2023/12/04 10:48:26 - mmengine - WARNING - bbox_head.cls_convs.1.1.conv is duplicate. It is skipped since bypass_duplicate=True
+2023/12/04 10:48:26 - mmengine - INFO - paramwise_options -- bbox_head.cls_convs.1.1.bn.weight:weight_decay=0.0
+2023/12/04 10:48:26 - mmengine - INFO - paramwise_options -- bbox_head.cls_convs.1.1.bn.bias:weight_decay=0.0
+2023/12/04 10:48:26 - mmengine - WARNING - bbox_head.cls_convs.2.0.conv is duplicate. It is skipped since bypass_duplicate=True
+2023/12/04 10:48:26 - mmengine - INFO - paramwise_options -- bbox_head.cls_convs.2.0.bn.weight:weight_decay=0.0
+2023/12/04 10:48:26 - mmengine - INFO - paramwise_options -- bbox_head.cls_convs.2.0.bn.bias:weight_decay=0.0
+2023/12/04 10:48:26 - mmengine - WARNING - bbox_head.cls_convs.2.1.conv is duplicate. It is skipped since bypass_duplicate=True
+2023/12/04 10:48:26 - mmengine - INFO - paramwise_options -- bbox_head.cls_convs.2.1.bn.weight:weight_decay=0.0
+2023/12/04 10:48:26 - mmengine - INFO - paramwise_options -- bbox_head.cls_convs.2.1.bn.bias:weight_decay=0.0
+2023/12/04 10:48:26 - mmengine - INFO - paramwise_options -- bbox_head.reg_convs.0.0.bn.weight:weight_decay=0.0
+2023/12/04 10:48:26 - mmengine - INFO - paramwise_options -- bbox_head.reg_convs.0.0.bn.bias:weight_decay=0.0
+2023/12/04 10:48:26 - mmengine - INFO - paramwise_options -- bbox_head.reg_convs.0.1.bn.weight:weight_decay=0.0
+2023/12/04 10:48:26 - mmengine - INFO - paramwise_options -- bbox_head.reg_convs.0.1.bn.bias:weight_decay=0.0
+2023/12/04 10:48:26 - mmengine - WARNING - bbox_head.reg_convs.1.0.conv is duplicate. It is skipped since bypass_duplicate=True
+2023/12/04 10:48:26 - mmengine - INFO - paramwise_options -- bbox_head.reg_convs.1.0.bn.weight:weight_decay=0.0
+2023/12/04 10:48:26 - mmengine - INFO - paramwise_options -- bbox_head.reg_convs.1.0.bn.bias:weight_decay=0.0
+2023/12/04 10:48:26 - mmengine - WARNING - bbox_head.reg_convs.1.1.conv is duplicate. It is skipped since bypass_duplicate=True
+2023/12/04 10:48:26 - mmengine - INFO - paramwise_options -- bbox_head.reg_convs.1.1.bn.weight:weight_decay=0.0
+2023/12/04 10:48:26 - mmengine - INFO - paramwise_options -- bbox_head.reg_convs.1.1.bn.bias:weight_decay=0.0
+2023/12/04 10:48:26 - mmengine - WARNING - bbox_head.reg_convs.2.0.conv is duplicate. It is skipped since bypass_duplicate=True
+2023/12/04 10:48:26 - mmengine - INFO - paramwise_options -- bbox_head.reg_convs.2.0.bn.weight:weight_decay=0.0
+2023/12/04 10:48:26 - mmengine - INFO - paramwise_options -- bbox_head.reg_convs.2.0.bn.bias:weight_decay=0.0
+2023/12/04 10:48:26 - mmengine - WARNING - bbox_head.reg_convs.2.1.conv is duplicate. It is skipped since bypass_duplicate=True
+2023/12/04 10:48:26 - mmengine - INFO - paramwise_options -- bbox_head.reg_convs.2.1.bn.weight:weight_decay=0.0
+2023/12/04 10:48:26 - mmengine - INFO - paramwise_options -- bbox_head.reg_convs.2.1.bn.bias:weight_decay=0.0
+2023/12/04 10:48:26 - mmengine - INFO - paramwise_options -- bbox_head.rtm_cls.0.bias:weight_decay=0.0
+2023/12/04 10:48:26 - mmengine - INFO - paramwise_options -- bbox_head.rtm_cls.1.bias:weight_decay=0.0
+2023/12/04 10:48:26 - mmengine - INFO - paramwise_options -- bbox_head.rtm_cls.2.bias:weight_decay=0.0
+2023/12/04 10:48:26 - mmengine - INFO - paramwise_options -- bbox_head.rtm_reg.0.bias:weight_decay=0.0
+2023/12/04 10:48:26 - mmengine - INFO - paramwise_options -- bbox_head.rtm_reg.1.bias:weight_decay=0.0
+2023/12/04 10:48:26 - mmengine - INFO - paramwise_options -- bbox_head.rtm_reg.2.bias:weight_decay=0.0
+2023/12/04 10:48:27 - mmengine - INFO - load backbone. in model from: https://download.openmmlab.com/mmdetection/v3.0/rtmdet/cspnext_rsb_pretrain/cspnext-tiny_imagenet_600e.pth
+Name of parameter - Initialization information
+
+backbone.stem.0.conv.weight - torch.Size([12, 3, 3, 3]): 
+PretrainedInit: load from https://download.openmmlab.com/mmdetection/v3.0/rtmdet/cspnext_rsb_pretrain/cspnext-tiny_imagenet_600e.pth 
+
+backbone.stem.0.bn.weight - torch.Size([12]): 
+PretrainedInit: load from https://download.openmmlab.com/mmdetection/v3.0/rtmdet/cspnext_rsb_pretrain/cspnext-tiny_imagenet_600e.pth 
+
+backbone.stem.0.bn.bias - torch.Size([12]): 
+PretrainedInit: load from https://download.openmmlab.com/mmdetection/v3.0/rtmdet/cspnext_rsb_pretrain/cspnext-tiny_imagenet_600e.pth 
+
+backbone.stem.1.conv.weight - torch.Size([12, 12, 3, 3]): 
+PretrainedInit: load from https://download.openmmlab.com/mmdetection/v3.0/rtmdet/cspnext_rsb_pretrain/cspnext-tiny_imagenet_600e.pth 
+
+backbone.stem.1.bn.weight - torch.Size([12]): 
+PretrainedInit: load from https://download.openmmlab.com/mmdetection/v3.0/rtmdet/cspnext_rsb_pretrain/cspnext-tiny_imagenet_600e.pth 
+
+backbone.stem.1.bn.bias - torch.Size([12]): 
+PretrainedInit: load from https://download.openmmlab.com/mmdetection/v3.0/rtmdet/cspnext_rsb_pretrain/cspnext-tiny_imagenet_600e.pth 
+
+backbone.stem.2.conv.weight - torch.Size([24, 12, 3, 3]): 
+PretrainedInit: load from https://download.openmmlab.com/mmdetection/v3.0/rtmdet/cspnext_rsb_pretrain/cspnext-tiny_imagenet_600e.pth 
+
+backbone.stem.2.bn.weight - torch.Size([24]): 
+PretrainedInit: load from https://download.openmmlab.com/mmdetection/v3.0/rtmdet/cspnext_rsb_pretrain/cspnext-tiny_imagenet_600e.pth 
+
+backbone.stem.2.bn.bias - torch.Size([24]): 
+PretrainedInit: load from https://download.openmmlab.com/mmdetection/v3.0/rtmdet/cspnext_rsb_pretrain/cspnext-tiny_imagenet_600e.pth 
+
+backbone.stage1.0.conv.weight - torch.Size([48, 24, 3, 3]): 
+PretrainedInit: load from https://download.openmmlab.com/mmdetection/v3.0/rtmdet/cspnext_rsb_pretrain/cspnext-tiny_imagenet_600e.pth 
+
+backbone.stage1.0.bn.weight - torch.Size([48]): 
+PretrainedInit: load from https://download.openmmlab.com/mmdetection/v3.0/rtmdet/cspnext_rsb_pretrain/cspnext-tiny_imagenet_600e.pth 
+
+backbone.stage1.0.bn.bias - torch.Size([48]): 
+PretrainedInit: load from https://download.openmmlab.com/mmdetection/v3.0/rtmdet/cspnext_rsb_pretrain/cspnext-tiny_imagenet_600e.pth 
+
+backbone.stage1.1.main_conv.conv.weight - torch.Size([24, 48, 1, 1]): 
+PretrainedInit: load from https://download.openmmlab.com/mmdetection/v3.0/rtmdet/cspnext_rsb_pretrain/cspnext-tiny_imagenet_600e.pth 
+
+backbone.stage1.1.main_conv.bn.weight - torch.Size([24]): 
+PretrainedInit: load from https://download.openmmlab.com/mmdetection/v3.0/rtmdet/cspnext_rsb_pretrain/cspnext-tiny_imagenet_600e.pth 
+
+backbone.stage1.1.main_conv.bn.bias - torch.Size([24]): 
+PretrainedInit: load from https://download.openmmlab.com/mmdetection/v3.0/rtmdet/cspnext_rsb_pretrain/cspnext-tiny_imagenet_600e.pth 
+
+backbone.stage1.1.short_conv.conv.weight - torch.Size([24, 48, 1, 1]): 
+PretrainedInit: load from https://download.openmmlab.com/mmdetection/v3.0/rtmdet/cspnext_rsb_pretrain/cspnext-tiny_imagenet_600e.pth 
+
+backbone.stage1.1.short_conv.bn.weight - torch.Size([24]): 
+PretrainedInit: load from https://download.openmmlab.com/mmdetection/v3.0/rtmdet/cspnext_rsb_pretrain/cspnext-tiny_imagenet_600e.pth 
+
+backbone.stage1.1.short_conv.bn.bias - torch.Size([24]): 
+PretrainedInit: load from https://download.openmmlab.com/mmdetection/v3.0/rtmdet/cspnext_rsb_pretrain/cspnext-tiny_imagenet_600e.pth 
+
+backbone.stage1.1.final_conv.conv.weight - torch.Size([48, 48, 1, 1]): 
+PretrainedInit: load from https://download.openmmlab.com/mmdetection/v3.0/rtmdet/cspnext_rsb_pretrain/cspnext-tiny_imagenet_600e.pth 
+
+backbone.stage1.1.final_conv.bn.weight - torch.Size([48]): 
+PretrainedInit: load from https://download.openmmlab.com/mmdetection/v3.0/rtmdet/cspnext_rsb_pretrain/cspnext-tiny_imagenet_600e.pth 
+
+backbone.stage1.1.final_conv.bn.bias - torch.Size([48]): 
+PretrainedInit: load from https://download.openmmlab.com/mmdetection/v3.0/rtmdet/cspnext_rsb_pretrain/cspnext-tiny_imagenet_600e.pth 
+
+backbone.stage1.1.blocks.0.conv1.conv.weight - torch.Size([24, 24, 3, 3]): 
+PretrainedInit: load from https://download.openmmlab.com/mmdetection/v3.0/rtmdet/cspnext_rsb_pretrain/cspnext-tiny_imagenet_600e.pth 
+
+backbone.stage1.1.blocks.0.conv1.bn.weight - torch.Size([24]): 
+PretrainedInit: load from https://download.openmmlab.com/mmdetection/v3.0/rtmdet/cspnext_rsb_pretrain/cspnext-tiny_imagenet_600e.pth 
+
+backbone.stage1.1.blocks.0.conv1.bn.bias - torch.Size([24]): 
+PretrainedInit: load from https://download.openmmlab.com/mmdetection/v3.0/rtmdet/cspnext_rsb_pretrain/cspnext-tiny_imagenet_600e.pth 
+
+backbone.stage1.1.blocks.0.conv2.depthwise_conv.conv.weight - torch.Size([24, 1, 5, 5]): 
+PretrainedInit: load from https://download.openmmlab.com/mmdetection/v3.0/rtmdet/cspnext_rsb_pretrain/cspnext-tiny_imagenet_600e.pth 
+
+backbone.stage1.1.blocks.0.conv2.depthwise_conv.bn.weight - torch.Size([24]): 
+PretrainedInit: load from https://download.openmmlab.com/mmdetection/v3.0/rtmdet/cspnext_rsb_pretrain/cspnext-tiny_imagenet_600e.pth 
+
+backbone.stage1.1.blocks.0.conv2.depthwise_conv.bn.bias - torch.Size([24]): 
+PretrainedInit: load from https://download.openmmlab.com/mmdetection/v3.0/rtmdet/cspnext_rsb_pretrain/cspnext-tiny_imagenet_600e.pth 
+
+backbone.stage1.1.blocks.0.conv2.pointwise_conv.conv.weight - torch.Size([24, 24, 1, 1]): 
+PretrainedInit: load from https://download.openmmlab.com/mmdetection/v3.0/rtmdet/cspnext_rsb_pretrain/cspnext-tiny_imagenet_600e.pth 
+
+backbone.stage1.1.blocks.0.conv2.pointwise_conv.bn.weight - torch.Size([24]): 
+PretrainedInit: load from https://download.openmmlab.com/mmdetection/v3.0/rtmdet/cspnext_rsb_pretrain/cspnext-tiny_imagenet_600e.pth 
+
+backbone.stage1.1.blocks.0.conv2.pointwise_conv.bn.bias - torch.Size([24]): 
+PretrainedInit: load from https://download.openmmlab.com/mmdetection/v3.0/rtmdet/cspnext_rsb_pretrain/cspnext-tiny_imagenet_600e.pth 
+
+backbone.stage1.1.attention.fc.weight - torch.Size([48, 48, 1, 1]): 
+PretrainedInit: load from https://download.openmmlab.com/mmdetection/v3.0/rtmdet/cspnext_rsb_pretrain/cspnext-tiny_imagenet_600e.pth 
+
+backbone.stage1.1.attention.fc.bias - torch.Size([48]): 
+PretrainedInit: load from https://download.openmmlab.com/mmdetection/v3.0/rtmdet/cspnext_rsb_pretrain/cspnext-tiny_imagenet_600e.pth 
+
+backbone.stage2.0.conv.weight - torch.Size([96, 48, 3, 3]): 
+PretrainedInit: load from https://download.openmmlab.com/mmdetection/v3.0/rtmdet/cspnext_rsb_pretrain/cspnext-tiny_imagenet_600e.pth 
+
+backbone.stage2.0.bn.weight - torch.Size([96]): 
+PretrainedInit: load from https://download.openmmlab.com/mmdetection/v3.0/rtmdet/cspnext_rsb_pretrain/cspnext-tiny_imagenet_600e.pth 
+
+backbone.stage2.0.bn.bias - torch.Size([96]): 
+PretrainedInit: load from https://download.openmmlab.com/mmdetection/v3.0/rtmdet/cspnext_rsb_pretrain/cspnext-tiny_imagenet_600e.pth 
+
+backbone.stage2.1.main_conv.conv.weight - torch.Size([48, 96, 1, 1]): 
+PretrainedInit: load from https://download.openmmlab.com/mmdetection/v3.0/rtmdet/cspnext_rsb_pretrain/cspnext-tiny_imagenet_600e.pth 
+
+backbone.stage2.1.main_conv.bn.weight - torch.Size([48]): 
+PretrainedInit: load from https://download.openmmlab.com/mmdetection/v3.0/rtmdet/cspnext_rsb_pretrain/cspnext-tiny_imagenet_600e.pth 
+
+backbone.stage2.1.main_conv.bn.bias - torch.Size([48]): 
+PretrainedInit: load from https://download.openmmlab.com/mmdetection/v3.0/rtmdet/cspnext_rsb_pretrain/cspnext-tiny_imagenet_600e.pth 
+
+backbone.stage2.1.short_conv.conv.weight - torch.Size([48, 96, 1, 1]): 
+PretrainedInit: load from https://download.openmmlab.com/mmdetection/v3.0/rtmdet/cspnext_rsb_pretrain/cspnext-tiny_imagenet_600e.pth 
+
+backbone.stage2.1.short_conv.bn.weight - torch.Size([48]): 
+PretrainedInit: load from https://download.openmmlab.com/mmdetection/v3.0/rtmdet/cspnext_rsb_pretrain/cspnext-tiny_imagenet_600e.pth 
+
+backbone.stage2.1.short_conv.bn.bias - torch.Size([48]): 
+PretrainedInit: load from https://download.openmmlab.com/mmdetection/v3.0/rtmdet/cspnext_rsb_pretrain/cspnext-tiny_imagenet_600e.pth 
+
+backbone.stage2.1.final_conv.conv.weight - torch.Size([96, 96, 1, 1]): 
+PretrainedInit: load from https://download.openmmlab.com/mmdetection/v3.0/rtmdet/cspnext_rsb_pretrain/cspnext-tiny_imagenet_600e.pth 
+
+backbone.stage2.1.final_conv.bn.weight - torch.Size([96]): 
+PretrainedInit: load from https://download.openmmlab.com/mmdetection/v3.0/rtmdet/cspnext_rsb_pretrain/cspnext-tiny_imagenet_600e.pth 
+
+backbone.stage2.1.final_conv.bn.bias - torch.Size([96]): 
+PretrainedInit: load from https://download.openmmlab.com/mmdetection/v3.0/rtmdet/cspnext_rsb_pretrain/cspnext-tiny_imagenet_600e.pth 
+
+backbone.stage2.1.blocks.0.conv1.conv.weight - torch.Size([48, 48, 3, 3]): 
+PretrainedInit: load from https://download.openmmlab.com/mmdetection/v3.0/rtmdet/cspnext_rsb_pretrain/cspnext-tiny_imagenet_600e.pth 
+
+backbone.stage2.1.blocks.0.conv1.bn.weight - torch.Size([48]): 
+PretrainedInit: load from https://download.openmmlab.com/mmdetection/v3.0/rtmdet/cspnext_rsb_pretrain/cspnext-tiny_imagenet_600e.pth 
+
+backbone.stage2.1.blocks.0.conv1.bn.bias - torch.Size([48]): 
+PretrainedInit: load from https://download.openmmlab.com/mmdetection/v3.0/rtmdet/cspnext_rsb_pretrain/cspnext-tiny_imagenet_600e.pth 
+
+backbone.stage2.1.blocks.0.conv2.depthwise_conv.conv.weight - torch.Size([48, 1, 5, 5]): 
+PretrainedInit: load from https://download.openmmlab.com/mmdetection/v3.0/rtmdet/cspnext_rsb_pretrain/cspnext-tiny_imagenet_600e.pth 
+
+backbone.stage2.1.blocks.0.conv2.depthwise_conv.bn.weight - torch.Size([48]): 
+PretrainedInit: load from https://download.openmmlab.com/mmdetection/v3.0/rtmdet/cspnext_rsb_pretrain/cspnext-tiny_imagenet_600e.pth 
+
+backbone.stage2.1.blocks.0.conv2.depthwise_conv.bn.bias - torch.Size([48]): 
+PretrainedInit: load from https://download.openmmlab.com/mmdetection/v3.0/rtmdet/cspnext_rsb_pretrain/cspnext-tiny_imagenet_600e.pth 
+
+backbone.stage2.1.blocks.0.conv2.pointwise_conv.conv.weight - torch.Size([48, 48, 1, 1]): 
+PretrainedInit: load from https://download.openmmlab.com/mmdetection/v3.0/rtmdet/cspnext_rsb_pretrain/cspnext-tiny_imagenet_600e.pth 
+
+backbone.stage2.1.blocks.0.conv2.pointwise_conv.bn.weight - torch.Size([48]): 
+PretrainedInit: load from https://download.openmmlab.com/mmdetection/v3.0/rtmdet/cspnext_rsb_pretrain/cspnext-tiny_imagenet_600e.pth 
+
+backbone.stage2.1.blocks.0.conv2.pointwise_conv.bn.bias - torch.Size([48]): 
+PretrainedInit: load from https://download.openmmlab.com/mmdetection/v3.0/rtmdet/cspnext_rsb_pretrain/cspnext-tiny_imagenet_600e.pth 
+
+backbone.stage2.1.attention.fc.weight - torch.Size([96, 96, 1, 1]): 
+PretrainedInit: load from https://download.openmmlab.com/mmdetection/v3.0/rtmdet/cspnext_rsb_pretrain/cspnext-tiny_imagenet_600e.pth 
+
+backbone.stage2.1.attention.fc.bias - torch.Size([96]): 
+PretrainedInit: load from https://download.openmmlab.com/mmdetection/v3.0/rtmdet/cspnext_rsb_pretrain/cspnext-tiny_imagenet_600e.pth 
+
+backbone.stage3.0.conv.weight - torch.Size([192, 96, 3, 3]): 
+PretrainedInit: load from https://download.openmmlab.com/mmdetection/v3.0/rtmdet/cspnext_rsb_pretrain/cspnext-tiny_imagenet_600e.pth 
+
+backbone.stage3.0.bn.weight - torch.Size([192]): 
+PretrainedInit: load from https://download.openmmlab.com/mmdetection/v3.0/rtmdet/cspnext_rsb_pretrain/cspnext-tiny_imagenet_600e.pth 
+
+backbone.stage3.0.bn.bias - torch.Size([192]): 
+PretrainedInit: load from https://download.openmmlab.com/mmdetection/v3.0/rtmdet/cspnext_rsb_pretrain/cspnext-tiny_imagenet_600e.pth 
+
+backbone.stage3.1.main_conv.conv.weight - torch.Size([96, 192, 1, 1]): 
+PretrainedInit: load from https://download.openmmlab.com/mmdetection/v3.0/rtmdet/cspnext_rsb_pretrain/cspnext-tiny_imagenet_600e.pth 
+
+backbone.stage3.1.main_conv.bn.weight - torch.Size([96]): 
+PretrainedInit: load from https://download.openmmlab.com/mmdetection/v3.0/rtmdet/cspnext_rsb_pretrain/cspnext-tiny_imagenet_600e.pth 
+
+backbone.stage3.1.main_conv.bn.bias - torch.Size([96]): 
+PretrainedInit: load from https://download.openmmlab.com/mmdetection/v3.0/rtmdet/cspnext_rsb_pretrain/cspnext-tiny_imagenet_600e.pth 
+
+backbone.stage3.1.short_conv.conv.weight - torch.Size([96, 192, 1, 1]): 
+PretrainedInit: load from https://download.openmmlab.com/mmdetection/v3.0/rtmdet/cspnext_rsb_pretrain/cspnext-tiny_imagenet_600e.pth 
+
+backbone.stage3.1.short_conv.bn.weight - torch.Size([96]): 
+PretrainedInit: load from https://download.openmmlab.com/mmdetection/v3.0/rtmdet/cspnext_rsb_pretrain/cspnext-tiny_imagenet_600e.pth 
+
+backbone.stage3.1.short_conv.bn.bias - torch.Size([96]): 
+PretrainedInit: load from https://download.openmmlab.com/mmdetection/v3.0/rtmdet/cspnext_rsb_pretrain/cspnext-tiny_imagenet_600e.pth 
+
+backbone.stage3.1.final_conv.conv.weight - torch.Size([192, 192, 1, 1]): 
+PretrainedInit: load from https://download.openmmlab.com/mmdetection/v3.0/rtmdet/cspnext_rsb_pretrain/cspnext-tiny_imagenet_600e.pth 
+
+backbone.stage3.1.final_conv.bn.weight - torch.Size([192]): 
+PretrainedInit: load from https://download.openmmlab.com/mmdetection/v3.0/rtmdet/cspnext_rsb_pretrain/cspnext-tiny_imagenet_600e.pth 
+
+backbone.stage3.1.final_conv.bn.bias - torch.Size([192]): 
+PretrainedInit: load from https://download.openmmlab.com/mmdetection/v3.0/rtmdet/cspnext_rsb_pretrain/cspnext-tiny_imagenet_600e.pth 
+
+backbone.stage3.1.blocks.0.conv1.conv.weight - torch.Size([96, 96, 3, 3]): 
+PretrainedInit: load from https://download.openmmlab.com/mmdetection/v3.0/rtmdet/cspnext_rsb_pretrain/cspnext-tiny_imagenet_600e.pth 
+
+backbone.stage3.1.blocks.0.conv1.bn.weight - torch.Size([96]): 
+PretrainedInit: load from https://download.openmmlab.com/mmdetection/v3.0/rtmdet/cspnext_rsb_pretrain/cspnext-tiny_imagenet_600e.pth 
+
+backbone.stage3.1.blocks.0.conv1.bn.bias - torch.Size([96]): 
+PretrainedInit: load from https://download.openmmlab.com/mmdetection/v3.0/rtmdet/cspnext_rsb_pretrain/cspnext-tiny_imagenet_600e.pth 
+
+backbone.stage3.1.blocks.0.conv2.depthwise_conv.conv.weight - torch.Size([96, 1, 5, 5]): 
+PretrainedInit: load from https://download.openmmlab.com/mmdetection/v3.0/rtmdet/cspnext_rsb_pretrain/cspnext-tiny_imagenet_600e.pth 
+
+backbone.stage3.1.blocks.0.conv2.depthwise_conv.bn.weight - torch.Size([96]): 
+PretrainedInit: load from https://download.openmmlab.com/mmdetection/v3.0/rtmdet/cspnext_rsb_pretrain/cspnext-tiny_imagenet_600e.pth 
+
+backbone.stage3.1.blocks.0.conv2.depthwise_conv.bn.bias - torch.Size([96]): 
+PretrainedInit: load from https://download.openmmlab.com/mmdetection/v3.0/rtmdet/cspnext_rsb_pretrain/cspnext-tiny_imagenet_600e.pth 
+
+backbone.stage3.1.blocks.0.conv2.pointwise_conv.conv.weight - torch.Size([96, 96, 1, 1]): 
+PretrainedInit: load from https://download.openmmlab.com/mmdetection/v3.0/rtmdet/cspnext_rsb_pretrain/cspnext-tiny_imagenet_600e.pth 
+
+backbone.stage3.1.blocks.0.conv2.pointwise_conv.bn.weight - torch.Size([96]): 
+PretrainedInit: load from https://download.openmmlab.com/mmdetection/v3.0/rtmdet/cspnext_rsb_pretrain/cspnext-tiny_imagenet_600e.pth 
+
+backbone.stage3.1.blocks.0.conv2.pointwise_conv.bn.bias - torch.Size([96]): 
+PretrainedInit: load from https://download.openmmlab.com/mmdetection/v3.0/rtmdet/cspnext_rsb_pretrain/cspnext-tiny_imagenet_600e.pth 
+
+backbone.stage3.1.attention.fc.weight - torch.Size([192, 192, 1, 1]): 
+PretrainedInit: load from https://download.openmmlab.com/mmdetection/v3.0/rtmdet/cspnext_rsb_pretrain/cspnext-tiny_imagenet_600e.pth 
+
+backbone.stage3.1.attention.fc.bias - torch.Size([192]): 
+PretrainedInit: load from https://download.openmmlab.com/mmdetection/v3.0/rtmdet/cspnext_rsb_pretrain/cspnext-tiny_imagenet_600e.pth 
+
+backbone.stage4.0.conv.weight - torch.Size([384, 192, 3, 3]): 
+PretrainedInit: load from https://download.openmmlab.com/mmdetection/v3.0/rtmdet/cspnext_rsb_pretrain/cspnext-tiny_imagenet_600e.pth 
+
+backbone.stage4.0.bn.weight - torch.Size([384]): 
+PretrainedInit: load from https://download.openmmlab.com/mmdetection/v3.0/rtmdet/cspnext_rsb_pretrain/cspnext-tiny_imagenet_600e.pth 
+
+backbone.stage4.0.bn.bias - torch.Size([384]): 
+PretrainedInit: load from https://download.openmmlab.com/mmdetection/v3.0/rtmdet/cspnext_rsb_pretrain/cspnext-tiny_imagenet_600e.pth 
+
+backbone.stage4.1.conv1.conv.weight - torch.Size([192, 384, 1, 1]): 
+PretrainedInit: load from https://download.openmmlab.com/mmdetection/v3.0/rtmdet/cspnext_rsb_pretrain/cspnext-tiny_imagenet_600e.pth 
+
+backbone.stage4.1.conv1.bn.weight - torch.Size([192]): 
+PretrainedInit: load from https://download.openmmlab.com/mmdetection/v3.0/rtmdet/cspnext_rsb_pretrain/cspnext-tiny_imagenet_600e.pth 
+
+backbone.stage4.1.conv1.bn.bias - torch.Size([192]): 
+PretrainedInit: load from https://download.openmmlab.com/mmdetection/v3.0/rtmdet/cspnext_rsb_pretrain/cspnext-tiny_imagenet_600e.pth 
+
+backbone.stage4.1.conv2.conv.weight - torch.Size([384, 768, 1, 1]): 
+PretrainedInit: load from https://download.openmmlab.com/mmdetection/v3.0/rtmdet/cspnext_rsb_pretrain/cspnext-tiny_imagenet_600e.pth 
+
+backbone.stage4.1.conv2.bn.weight - torch.Size([384]): 
+PretrainedInit: load from https://download.openmmlab.com/mmdetection/v3.0/rtmdet/cspnext_rsb_pretrain/cspnext-tiny_imagenet_600e.pth 
+
+backbone.stage4.1.conv2.bn.bias - torch.Size([384]): 
+PretrainedInit: load from https://download.openmmlab.com/mmdetection/v3.0/rtmdet/cspnext_rsb_pretrain/cspnext-tiny_imagenet_600e.pth 
+
+backbone.stage4.2.main_conv.conv.weight - torch.Size([192, 384, 1, 1]): 
+PretrainedInit: load from https://download.openmmlab.com/mmdetection/v3.0/rtmdet/cspnext_rsb_pretrain/cspnext-tiny_imagenet_600e.pth 
+
+backbone.stage4.2.main_conv.bn.weight - torch.Size([192]): 
+PretrainedInit: load from https://download.openmmlab.com/mmdetection/v3.0/rtmdet/cspnext_rsb_pretrain/cspnext-tiny_imagenet_600e.pth 
+
+backbone.stage4.2.main_conv.bn.bias - torch.Size([192]): 
+PretrainedInit: load from https://download.openmmlab.com/mmdetection/v3.0/rtmdet/cspnext_rsb_pretrain/cspnext-tiny_imagenet_600e.pth 
+
+backbone.stage4.2.short_conv.conv.weight - torch.Size([192, 384, 1, 1]): 
+PretrainedInit: load from https://download.openmmlab.com/mmdetection/v3.0/rtmdet/cspnext_rsb_pretrain/cspnext-tiny_imagenet_600e.pth 
+
+backbone.stage4.2.short_conv.bn.weight - torch.Size([192]): 
+PretrainedInit: load from https://download.openmmlab.com/mmdetection/v3.0/rtmdet/cspnext_rsb_pretrain/cspnext-tiny_imagenet_600e.pth 
+
+backbone.stage4.2.short_conv.bn.bias - torch.Size([192]): 
+PretrainedInit: load from https://download.openmmlab.com/mmdetection/v3.0/rtmdet/cspnext_rsb_pretrain/cspnext-tiny_imagenet_600e.pth 
+
+backbone.stage4.2.final_conv.conv.weight - torch.Size([384, 384, 1, 1]): 
+PretrainedInit: load from https://download.openmmlab.com/mmdetection/v3.0/rtmdet/cspnext_rsb_pretrain/cspnext-tiny_imagenet_600e.pth 
+
+backbone.stage4.2.final_conv.bn.weight - torch.Size([384]): 
+PretrainedInit: load from https://download.openmmlab.com/mmdetection/v3.0/rtmdet/cspnext_rsb_pretrain/cspnext-tiny_imagenet_600e.pth 
+
+backbone.stage4.2.final_conv.bn.bias - torch.Size([384]): 
+PretrainedInit: load from https://download.openmmlab.com/mmdetection/v3.0/rtmdet/cspnext_rsb_pretrain/cspnext-tiny_imagenet_600e.pth 
+
+backbone.stage4.2.blocks.0.conv1.conv.weight - torch.Size([192, 192, 3, 3]): 
+PretrainedInit: load from https://download.openmmlab.com/mmdetection/v3.0/rtmdet/cspnext_rsb_pretrain/cspnext-tiny_imagenet_600e.pth 
+
+backbone.stage4.2.blocks.0.conv1.bn.weight - torch.Size([192]): 
+PretrainedInit: load from https://download.openmmlab.com/mmdetection/v3.0/rtmdet/cspnext_rsb_pretrain/cspnext-tiny_imagenet_600e.pth 
+
+backbone.stage4.2.blocks.0.conv1.bn.bias - torch.Size([192]): 
+PretrainedInit: load from https://download.openmmlab.com/mmdetection/v3.0/rtmdet/cspnext_rsb_pretrain/cspnext-tiny_imagenet_600e.pth 
+
+backbone.stage4.2.blocks.0.conv2.depthwise_conv.conv.weight - torch.Size([192, 1, 5, 5]): 
+PretrainedInit: load from https://download.openmmlab.com/mmdetection/v3.0/rtmdet/cspnext_rsb_pretrain/cspnext-tiny_imagenet_600e.pth 
+
+backbone.stage4.2.blocks.0.conv2.depthwise_conv.bn.weight - torch.Size([192]): 
+PretrainedInit: load from https://download.openmmlab.com/mmdetection/v3.0/rtmdet/cspnext_rsb_pretrain/cspnext-tiny_imagenet_600e.pth 
+
+backbone.stage4.2.blocks.0.conv2.depthwise_conv.bn.bias - torch.Size([192]): 
+PretrainedInit: load from https://download.openmmlab.com/mmdetection/v3.0/rtmdet/cspnext_rsb_pretrain/cspnext-tiny_imagenet_600e.pth 
+
+backbone.stage4.2.blocks.0.conv2.pointwise_conv.conv.weight - torch.Size([192, 192, 1, 1]): 
+PretrainedInit: load from https://download.openmmlab.com/mmdetection/v3.0/rtmdet/cspnext_rsb_pretrain/cspnext-tiny_imagenet_600e.pth 
+
+backbone.stage4.2.blocks.0.conv2.pointwise_conv.bn.weight - torch.Size([192]): 
+PretrainedInit: load from https://download.openmmlab.com/mmdetection/v3.0/rtmdet/cspnext_rsb_pretrain/cspnext-tiny_imagenet_600e.pth 
+
+backbone.stage4.2.blocks.0.conv2.pointwise_conv.bn.bias - torch.Size([192]): 
+PretrainedInit: load from https://download.openmmlab.com/mmdetection/v3.0/rtmdet/cspnext_rsb_pretrain/cspnext-tiny_imagenet_600e.pth 
+
+backbone.stage4.2.attention.fc.weight - torch.Size([384, 384, 1, 1]): 
+PretrainedInit: load from https://download.openmmlab.com/mmdetection/v3.0/rtmdet/cspnext_rsb_pretrain/cspnext-tiny_imagenet_600e.pth 
+
+backbone.stage4.2.attention.fc.bias - torch.Size([384]): 
+PretrainedInit: load from https://download.openmmlab.com/mmdetection/v3.0/rtmdet/cspnext_rsb_pretrain/cspnext-tiny_imagenet_600e.pth 
+
+neck.reduce_layers.0.conv.weight - torch.Size([192, 384, 1, 1]): 
+KaimingInit: a=2.23606797749979, mode=fan_in, nonlinearity=leaky_relu, distribution =uniform, bias=0 
+
+neck.reduce_layers.0.bn.weight - torch.Size([192]): 
+The value is the same before and after calling `init_weights` of RTMDet  
+
+neck.reduce_layers.0.bn.bias - torch.Size([192]): 
+The value is the same before and after calling `init_weights` of RTMDet  
+
+neck.reduce_layers.1.conv.weight - torch.Size([96, 192, 1, 1]): 
+KaimingInit: a=2.23606797749979, mode=fan_in, nonlinearity=leaky_relu, distribution =uniform, bias=0 
+
+neck.reduce_layers.1.bn.weight - torch.Size([96]): 
+The value is the same before and after calling `init_weights` of RTMDet  
+
+neck.reduce_layers.1.bn.bias - torch.Size([96]): 
+The value is the same before and after calling `init_weights` of RTMDet  
+
+neck.top_down_blocks.0.main_conv.conv.weight - torch.Size([96, 384, 1, 1]): 
+KaimingInit: a=2.23606797749979, mode=fan_in, nonlinearity=leaky_relu, distribution =uniform, bias=0 
+
+neck.top_down_blocks.0.main_conv.bn.weight - torch.Size([96]): 
+The value is the same before and after calling `init_weights` of RTMDet  
+
+neck.top_down_blocks.0.main_conv.bn.bias - torch.Size([96]): 
+The value is the same before and after calling `init_weights` of RTMDet  
+
+neck.top_down_blocks.0.short_conv.conv.weight - torch.Size([96, 384, 1, 1]): 
+KaimingInit: a=2.23606797749979, mode=fan_in, nonlinearity=leaky_relu, distribution =uniform, bias=0 
+
+neck.top_down_blocks.0.short_conv.bn.weight - torch.Size([96]): 
+The value is the same before and after calling `init_weights` of RTMDet  
+
+neck.top_down_blocks.0.short_conv.bn.bias - torch.Size([96]): 
+The value is the same before and after calling `init_weights` of RTMDet  
+
+neck.top_down_blocks.0.final_conv.conv.weight - torch.Size([192, 192, 1, 1]): 
+KaimingInit: a=2.23606797749979, mode=fan_in, nonlinearity=leaky_relu, distribution =uniform, bias=0 
+
+neck.top_down_blocks.0.final_conv.bn.weight - torch.Size([192]): 
+The value is the same before and after calling `init_weights` of RTMDet  
+
+neck.top_down_blocks.0.final_conv.bn.bias - torch.Size([192]): 
+The value is the same before and after calling `init_weights` of RTMDet  
+
+neck.top_down_blocks.0.blocks.0.conv1.conv.weight - torch.Size([96, 96, 3, 3]): 
+KaimingInit: a=2.23606797749979, mode=fan_in, nonlinearity=leaky_relu, distribution =uniform, bias=0 
+
+neck.top_down_blocks.0.blocks.0.conv1.bn.weight - torch.Size([96]): 
+The value is the same before and after calling `init_weights` of RTMDet  
+
+neck.top_down_blocks.0.blocks.0.conv1.bn.bias - torch.Size([96]): 
+The value is the same before and after calling `init_weights` of RTMDet  
+
+neck.top_down_blocks.0.blocks.0.conv2.depthwise_conv.conv.weight - torch.Size([96, 1, 5, 5]): 
+KaimingInit: a=2.23606797749979, mode=fan_in, nonlinearity=leaky_relu, distribution =uniform, bias=0 
+
+neck.top_down_blocks.0.blocks.0.conv2.depthwise_conv.bn.weight - torch.Size([96]): 
+The value is the same before and after calling `init_weights` of RTMDet  
+
+neck.top_down_blocks.0.blocks.0.conv2.depthwise_conv.bn.bias - torch.Size([96]): 
+The value is the same before and after calling `init_weights` of RTMDet  
+
+neck.top_down_blocks.0.blocks.0.conv2.pointwise_conv.conv.weight - torch.Size([96, 96, 1, 1]): 
+KaimingInit: a=2.23606797749979, mode=fan_in, nonlinearity=leaky_relu, distribution =uniform, bias=0 
+
+neck.top_down_blocks.0.blocks.0.conv2.pointwise_conv.bn.weight - torch.Size([96]): 
+The value is the same before and after calling `init_weights` of RTMDet  
+
+neck.top_down_blocks.0.blocks.0.conv2.pointwise_conv.bn.bias - torch.Size([96]): 
+The value is the same before and after calling `init_weights` of RTMDet  
+
+neck.top_down_blocks.1.main_conv.conv.weight - torch.Size([48, 192, 1, 1]): 
+KaimingInit: a=2.23606797749979, mode=fan_in, nonlinearity=leaky_relu, distribution =uniform, bias=0 
+
+neck.top_down_blocks.1.main_conv.bn.weight - torch.Size([48]): 
+The value is the same before and after calling `init_weights` of RTMDet  
+
+neck.top_down_blocks.1.main_conv.bn.bias - torch.Size([48]): 
+The value is the same before and after calling `init_weights` of RTMDet  
+
+neck.top_down_blocks.1.short_conv.conv.weight - torch.Size([48, 192, 1, 1]): 
+KaimingInit: a=2.23606797749979, mode=fan_in, nonlinearity=leaky_relu, distribution =uniform, bias=0 
+
+neck.top_down_blocks.1.short_conv.bn.weight - torch.Size([48]): 
+The value is the same before and after calling `init_weights` of RTMDet  
+
+neck.top_down_blocks.1.short_conv.bn.bias - torch.Size([48]): 
+The value is the same before and after calling `init_weights` of RTMDet  
+
+neck.top_down_blocks.1.final_conv.conv.weight - torch.Size([96, 96, 1, 1]): 
+KaimingInit: a=2.23606797749979, mode=fan_in, nonlinearity=leaky_relu, distribution =uniform, bias=0 
+
+neck.top_down_blocks.1.final_conv.bn.weight - torch.Size([96]): 
+The value is the same before and after calling `init_weights` of RTMDet  
+
+neck.top_down_blocks.1.final_conv.bn.bias - torch.Size([96]): 
+The value is the same before and after calling `init_weights` of RTMDet  
+
+neck.top_down_blocks.1.blocks.0.conv1.conv.weight - torch.Size([48, 48, 3, 3]): 
+KaimingInit: a=2.23606797749979, mode=fan_in, nonlinearity=leaky_relu, distribution =uniform, bias=0 
+
+neck.top_down_blocks.1.blocks.0.conv1.bn.weight - torch.Size([48]): 
+The value is the same before and after calling `init_weights` of RTMDet  
+
+neck.top_down_blocks.1.blocks.0.conv1.bn.bias - torch.Size([48]): 
+The value is the same before and after calling `init_weights` of RTMDet  
+
+neck.top_down_blocks.1.blocks.0.conv2.depthwise_conv.conv.weight - torch.Size([48, 1, 5, 5]): 
+KaimingInit: a=2.23606797749979, mode=fan_in, nonlinearity=leaky_relu, distribution =uniform, bias=0 
+
+neck.top_down_blocks.1.blocks.0.conv2.depthwise_conv.bn.weight - torch.Size([48]): 
+The value is the same before and after calling `init_weights` of RTMDet  
+
+neck.top_down_blocks.1.blocks.0.conv2.depthwise_conv.bn.bias - torch.Size([48]): 
+The value is the same before and after calling `init_weights` of RTMDet  
+
+neck.top_down_blocks.1.blocks.0.conv2.pointwise_conv.conv.weight - torch.Size([48, 48, 1, 1]): 
+KaimingInit: a=2.23606797749979, mode=fan_in, nonlinearity=leaky_relu, distribution =uniform, bias=0 
+
+neck.top_down_blocks.1.blocks.0.conv2.pointwise_conv.bn.weight - torch.Size([48]): 
+The value is the same before and after calling `init_weights` of RTMDet  
+
+neck.top_down_blocks.1.blocks.0.conv2.pointwise_conv.bn.bias - torch.Size([48]): 
+The value is the same before and after calling `init_weights` of RTMDet  
+
+neck.downsamples.0.conv.weight - torch.Size([96, 96, 3, 3]): 
+KaimingInit: a=2.23606797749979, mode=fan_in, nonlinearity=leaky_relu, distribution =uniform, bias=0 
+
+neck.downsamples.0.bn.weight - torch.Size([96]): 
+The value is the same before and after calling `init_weights` of RTMDet  
+
+neck.downsamples.0.bn.bias - torch.Size([96]): 
+The value is the same before and after calling `init_weights` of RTMDet  
+
+neck.downsamples.1.conv.weight - torch.Size([192, 192, 3, 3]): 
+KaimingInit: a=2.23606797749979, mode=fan_in, nonlinearity=leaky_relu, distribution =uniform, bias=0 
+
+neck.downsamples.1.bn.weight - torch.Size([192]): 
+The value is the same before and after calling `init_weights` of RTMDet  
+
+neck.downsamples.1.bn.bias - torch.Size([192]): 
+The value is the same before and after calling `init_weights` of RTMDet  
+
+neck.bottom_up_blocks.0.main_conv.conv.weight - torch.Size([96, 192, 1, 1]): 
+KaimingInit: a=2.23606797749979, mode=fan_in, nonlinearity=leaky_relu, distribution =uniform, bias=0 
+
+neck.bottom_up_blocks.0.main_conv.bn.weight - torch.Size([96]): 
+The value is the same before and after calling `init_weights` of RTMDet  
+
+neck.bottom_up_blocks.0.main_conv.bn.bias - torch.Size([96]): 
+The value is the same before and after calling `init_weights` of RTMDet  
+
+neck.bottom_up_blocks.0.short_conv.conv.weight - torch.Size([96, 192, 1, 1]): 
+KaimingInit: a=2.23606797749979, mode=fan_in, nonlinearity=leaky_relu, distribution =uniform, bias=0 
+
+neck.bottom_up_blocks.0.short_conv.bn.weight - torch.Size([96]): 
+The value is the same before and after calling `init_weights` of RTMDet  
+
+neck.bottom_up_blocks.0.short_conv.bn.bias - torch.Size([96]): 
+The value is the same before and after calling `init_weights` of RTMDet  
+
+neck.bottom_up_blocks.0.final_conv.conv.weight - torch.Size([192, 192, 1, 1]): 
+KaimingInit: a=2.23606797749979, mode=fan_in, nonlinearity=leaky_relu, distribution =uniform, bias=0 
+
+neck.bottom_up_blocks.0.final_conv.bn.weight - torch.Size([192]): 
+The value is the same before and after calling `init_weights` of RTMDet  
+
+neck.bottom_up_blocks.0.final_conv.bn.bias - torch.Size([192]): 
+The value is the same before and after calling `init_weights` of RTMDet  
+
+neck.bottom_up_blocks.0.blocks.0.conv1.conv.weight - torch.Size([96, 96, 3, 3]): 
+KaimingInit: a=2.23606797749979, mode=fan_in, nonlinearity=leaky_relu, distribution =uniform, bias=0 
+
+neck.bottom_up_blocks.0.blocks.0.conv1.bn.weight - torch.Size([96]): 
+The value is the same before and after calling `init_weights` of RTMDet  
+
+neck.bottom_up_blocks.0.blocks.0.conv1.bn.bias - torch.Size([96]): 
+The value is the same before and after calling `init_weights` of RTMDet  
+
+neck.bottom_up_blocks.0.blocks.0.conv2.depthwise_conv.conv.weight - torch.Size([96, 1, 5, 5]): 
+KaimingInit: a=2.23606797749979, mode=fan_in, nonlinearity=leaky_relu, distribution =uniform, bias=0 
+
+neck.bottom_up_blocks.0.blocks.0.conv2.depthwise_conv.bn.weight - torch.Size([96]): 
+The value is the same before and after calling `init_weights` of RTMDet  
+
+neck.bottom_up_blocks.0.blocks.0.conv2.depthwise_conv.bn.bias - torch.Size([96]): 
+The value is the same before and after calling `init_weights` of RTMDet  
+
+neck.bottom_up_blocks.0.blocks.0.conv2.pointwise_conv.conv.weight - torch.Size([96, 96, 1, 1]): 
+KaimingInit: a=2.23606797749979, mode=fan_in, nonlinearity=leaky_relu, distribution =uniform, bias=0 
+
+neck.bottom_up_blocks.0.blocks.0.conv2.pointwise_conv.bn.weight - torch.Size([96]): 
+The value is the same before and after calling `init_weights` of RTMDet  
+
+neck.bottom_up_blocks.0.blocks.0.conv2.pointwise_conv.bn.bias - torch.Size([96]): 
+The value is the same before and after calling `init_weights` of RTMDet  
+
+neck.bottom_up_blocks.1.main_conv.conv.weight - torch.Size([192, 384, 1, 1]): 
+KaimingInit: a=2.23606797749979, mode=fan_in, nonlinearity=leaky_relu, distribution =uniform, bias=0 
+
+neck.bottom_up_blocks.1.main_conv.bn.weight - torch.Size([192]): 
+The value is the same before and after calling `init_weights` of RTMDet  
+
+neck.bottom_up_blocks.1.main_conv.bn.bias - torch.Size([192]): 
+The value is the same before and after calling `init_weights` of RTMDet  
+
+neck.bottom_up_blocks.1.short_conv.conv.weight - torch.Size([192, 384, 1, 1]): 
+KaimingInit: a=2.23606797749979, mode=fan_in, nonlinearity=leaky_relu, distribution =uniform, bias=0 
+
+neck.bottom_up_blocks.1.short_conv.bn.weight - torch.Size([192]): 
+The value is the same before and after calling `init_weights` of RTMDet  
+
+neck.bottom_up_blocks.1.short_conv.bn.bias - torch.Size([192]): 
+The value is the same before and after calling `init_weights` of RTMDet  
+
+neck.bottom_up_blocks.1.final_conv.conv.weight - torch.Size([384, 384, 1, 1]): 
+KaimingInit: a=2.23606797749979, mode=fan_in, nonlinearity=leaky_relu, distribution =uniform, bias=0 
+
+neck.bottom_up_blocks.1.final_conv.bn.weight - torch.Size([384]): 
+The value is the same before and after calling `init_weights` of RTMDet  
+
+neck.bottom_up_blocks.1.final_conv.bn.bias - torch.Size([384]): 
+The value is the same before and after calling `init_weights` of RTMDet  
+
+neck.bottom_up_blocks.1.blocks.0.conv1.conv.weight - torch.Size([192, 192, 3, 3]): 
+KaimingInit: a=2.23606797749979, mode=fan_in, nonlinearity=leaky_relu, distribution =uniform, bias=0 
+
+neck.bottom_up_blocks.1.blocks.0.conv1.bn.weight - torch.Size([192]): 
+The value is the same before and after calling `init_weights` of RTMDet  
+
+neck.bottom_up_blocks.1.blocks.0.conv1.bn.bias - torch.Size([192]): 
+The value is the same before and after calling `init_weights` of RTMDet  
+
+neck.bottom_up_blocks.1.blocks.0.conv2.depthwise_conv.conv.weight - torch.Size([192, 1, 5, 5]): 
+KaimingInit: a=2.23606797749979, mode=fan_in, nonlinearity=leaky_relu, distribution =uniform, bias=0 
+
+neck.bottom_up_blocks.1.blocks.0.conv2.depthwise_conv.bn.weight - torch.Size([192]): 
+The value is the same before and after calling `init_weights` of RTMDet  
+
+neck.bottom_up_blocks.1.blocks.0.conv2.depthwise_conv.bn.bias - torch.Size([192]): 
+The value is the same before and after calling `init_weights` of RTMDet  
+
+neck.bottom_up_blocks.1.blocks.0.conv2.pointwise_conv.conv.weight - torch.Size([192, 192, 1, 1]): 
+KaimingInit: a=2.23606797749979, mode=fan_in, nonlinearity=leaky_relu, distribution =uniform, bias=0 
+
+neck.bottom_up_blocks.1.blocks.0.conv2.pointwise_conv.bn.weight - torch.Size([192]): 
+The value is the same before and after calling `init_weights` of RTMDet  
+
+neck.bottom_up_blocks.1.blocks.0.conv2.pointwise_conv.bn.bias - torch.Size([192]): 
+The value is the same before and after calling `init_weights` of RTMDet  
+
+neck.out_convs.0.conv.weight - torch.Size([96, 96, 3, 3]): 
+KaimingInit: a=2.23606797749979, mode=fan_in, nonlinearity=leaky_relu, distribution =uniform, bias=0 
+
+neck.out_convs.0.bn.weight - torch.Size([96]): 
+The value is the same before and after calling `init_weights` of RTMDet  
+
+neck.out_convs.0.bn.bias - torch.Size([96]): 
+The value is the same before and after calling `init_weights` of RTMDet  
+
+neck.out_convs.1.conv.weight - torch.Size([96, 192, 3, 3]): 
+KaimingInit: a=2.23606797749979, mode=fan_in, nonlinearity=leaky_relu, distribution =uniform, bias=0 
+
+neck.out_convs.1.bn.weight - torch.Size([96]): 
+The value is the same before and after calling `init_weights` of RTMDet  
+
+neck.out_convs.1.bn.bias - torch.Size([96]): 
+The value is the same before and after calling `init_weights` of RTMDet  
+
+neck.out_convs.2.conv.weight - torch.Size([96, 384, 3, 3]): 
+KaimingInit: a=2.23606797749979, mode=fan_in, nonlinearity=leaky_relu, distribution =uniform, bias=0 
+
+neck.out_convs.2.bn.weight - torch.Size([96]): 
+The value is the same before and after calling `init_weights` of RTMDet  
+
+neck.out_convs.2.bn.bias - torch.Size([96]): 
+The value is the same before and after calling `init_weights` of RTMDet  
+
+bbox_head.cls_convs.0.0.conv.weight - torch.Size([96, 96, 3, 3]): 
+Initialized by user-defined `init_weights` in RTMDetSepBNHead  
+
+bbox_head.cls_convs.0.0.bn.weight - torch.Size([96]): 
+The value is the same before and after calling `init_weights` of RTMDet  
+
+bbox_head.cls_convs.0.0.bn.bias - torch.Size([96]): 
+The value is the same before and after calling `init_weights` of RTMDet  
+
+bbox_head.cls_convs.0.1.conv.weight - torch.Size([96, 96, 3, 3]): 
+Initialized by user-defined `init_weights` in RTMDetSepBNHead  
+
+bbox_head.cls_convs.0.1.bn.weight - torch.Size([96]): 
+The value is the same before and after calling `init_weights` of RTMDet  
+
+bbox_head.cls_convs.0.1.bn.bias - torch.Size([96]): 
+The value is the same before and after calling `init_weights` of RTMDet  
+
+bbox_head.cls_convs.1.0.bn.weight - torch.Size([96]): 
+The value is the same before and after calling `init_weights` of RTMDet  
+
+bbox_head.cls_convs.1.0.bn.bias - torch.Size([96]): 
+The value is the same before and after calling `init_weights` of RTMDet  
+
+bbox_head.cls_convs.1.1.bn.weight - torch.Size([96]): 
+The value is the same before and after calling `init_weights` of RTMDet  
+
+bbox_head.cls_convs.1.1.bn.bias - torch.Size([96]): 
+The value is the same before and after calling `init_weights` of RTMDet  
+
+bbox_head.cls_convs.2.0.bn.weight - torch.Size([96]): 
+The value is the same before and after calling `init_weights` of RTMDet  
+
+bbox_head.cls_convs.2.0.bn.bias - torch.Size([96]): 
+The value is the same before and after calling `init_weights` of RTMDet  
+
+bbox_head.cls_convs.2.1.bn.weight - torch.Size([96]): 
+The value is the same before and after calling `init_weights` of RTMDet  
+
+bbox_head.cls_convs.2.1.bn.bias - torch.Size([96]): 
+The value is the same before and after calling `init_weights` of RTMDet  
+
+bbox_head.reg_convs.0.0.conv.weight - torch.Size([96, 96, 3, 3]): 
+Initialized by user-defined `init_weights` in RTMDetSepBNHead  
+
+bbox_head.reg_convs.0.0.bn.weight - torch.Size([96]): 
+The value is the same before and after calling `init_weights` of RTMDet  
+
+bbox_head.reg_convs.0.0.bn.bias - torch.Size([96]): 
+The value is the same before and after calling `init_weights` of RTMDet  
+
+bbox_head.reg_convs.0.1.conv.weight - torch.Size([96, 96, 3, 3]): 
+Initialized by user-defined `init_weights` in RTMDetSepBNHead  
+
+bbox_head.reg_convs.0.1.bn.weight - torch.Size([96]): 
+The value is the same before and after calling `init_weights` of RTMDet  
+
+bbox_head.reg_convs.0.1.bn.bias - torch.Size([96]): 
+The value is the same before and after calling `init_weights` of RTMDet  
+
+bbox_head.reg_convs.1.0.bn.weight - torch.Size([96]): 
+The value is the same before and after calling `init_weights` of RTMDet  
+
+bbox_head.reg_convs.1.0.bn.bias - torch.Size([96]): 
+The value is the same before and after calling `init_weights` of RTMDet  
+
+bbox_head.reg_convs.1.1.bn.weight - torch.Size([96]): 
+The value is the same before and after calling `init_weights` of RTMDet  
+
+bbox_head.reg_convs.1.1.bn.bias - torch.Size([96]): 
+The value is the same before and after calling `init_weights` of RTMDet  
+
+bbox_head.reg_convs.2.0.bn.weight - torch.Size([96]): 
+The value is the same before and after calling `init_weights` of RTMDet  
+
+bbox_head.reg_convs.2.0.bn.bias - torch.Size([96]): 
+The value is the same before and after calling `init_weights` of RTMDet  
+
+bbox_head.reg_convs.2.1.bn.weight - torch.Size([96]): 
+The value is the same before and after calling `init_weights` of RTMDet  
+
+bbox_head.reg_convs.2.1.bn.bias - torch.Size([96]): 
+The value is the same before and after calling `init_weights` of RTMDet  
+
+bbox_head.rtm_cls.0.weight - torch.Size([1, 96, 1, 1]): 
+Initialized by user-defined `init_weights` in RTMDetSepBNHead  
+
+bbox_head.rtm_cls.0.bias - torch.Size([1]): 
+Initialized by user-defined `init_weights` in RTMDetSepBNHead  
+
+bbox_head.rtm_cls.1.weight - torch.Size([1, 96, 1, 1]): 
+Initialized by user-defined `init_weights` in RTMDetSepBNHead  
+
+bbox_head.rtm_cls.1.bias - torch.Size([1]): 
+Initialized by user-defined `init_weights` in RTMDetSepBNHead  
+
+bbox_head.rtm_cls.2.weight - torch.Size([1, 96, 1, 1]): 
+Initialized by user-defined `init_weights` in RTMDetSepBNHead  
+
+bbox_head.rtm_cls.2.bias - torch.Size([1]): 
+Initialized by user-defined `init_weights` in RTMDetSepBNHead  
+
+bbox_head.rtm_reg.0.weight - torch.Size([4, 96, 1, 1]): 
+Initialized by user-defined `init_weights` in RTMDetSepBNHead  
+
+bbox_head.rtm_reg.0.bias - torch.Size([4]): 
+Initialized by user-defined `init_weights` in RTMDetSepBNHead  
+
+bbox_head.rtm_reg.1.weight - torch.Size([4, 96, 1, 1]): 
+Initialized by user-defined `init_weights` in RTMDetSepBNHead  
+
+bbox_head.rtm_reg.1.bias - torch.Size([4]): 
+Initialized by user-defined `init_weights` in RTMDetSepBNHead  
+
+bbox_head.rtm_reg.2.weight - torch.Size([4, 96, 1, 1]): 
+Initialized by user-defined `init_weights` in RTMDetSepBNHead  
+
+bbox_head.rtm_reg.2.bias - torch.Size([4]): 
+Initialized by user-defined `init_weights` in RTMDetSepBNHead  
+2023/12/04 10:48:29 - mmengine - INFO - Load checkpoint from ./checkpoints/rtmdet_tiny_8xb32-300e_coco_20220902_112414-78e30dcc.pth
+2023/12/04 10:48:29 - mmengine - WARNING - "FileClient" will be deprecated in future. Please use io functions in https://mmengine.readthedocs.io/en/latest/api/fileio.html#file-io
+2023/12/04 10:48:29 - mmengine - WARNING - "HardDiskBackend" is the alias of "LocalBackend" and the former will be deprecated in future.
+2023/12/04 10:48:29 - mmengine - INFO - Checkpoints will be saved to /home/wzhmiasanmia/hi_workspace/wheel_bolt_recognition/work_dirs/rtmdet_tiny_1xb4-20e_tire.
+2023/12/04 10:49:17 - mmengine - INFO - Epoch(train)  [1][ 5/19]  base_lr: 3.5556e-05 lr: 3.5556e-05  eta: 2:02:31  time: 9.7374  data_time: 0.2639  memory: 1420  loss: 1.9410  loss_cls: 0.5679  loss_bbox: 1.3731
+2023/12/04 10:49:28 - mmengine - INFO - Epoch(train)  [1][10/19]  base_lr: 8.0000e-05 lr: 8.0000e-05  eta: 1:14:06  time: 5.9292  data_time: 1.0597  memory: 1420  loss: 1.9207  loss_cls: 0.5036  loss_bbox: 1.4171
+2023/12/04 10:49:32 - mmengine - INFO - Epoch(train)  [1][15/19]  base_lr: 8.0000e-05 lr: 8.0000e-05  eta: 0:52:12  time: 4.2046  data_time: 0.8758  memory: 1420  loss: 1.9242  loss_cls: 0.5209  loss_bbox: 1.4033
+2023/12/04 10:49:34 - mmengine - INFO - Exp name: rtmdet_tiny_1xb4-20e_tire_20231204_104819
+2023/12/04 10:49:36 - mmengine - INFO - Evaluating bbox...
+2023/12/04 10:49:37 - mmengine - INFO - bbox_mAP_copypaste: 0.000 0.000 0.000 -1.000 0.000 0.000
+2023/12/04 10:49:37 - mmengine - INFO - Epoch(val) [1][4/4]    coco/bbox_mAP: 0.0000  coco/bbox_mAP_50: 0.0000  coco/bbox_mAP_75: 0.0000  coco/bbox_mAP_s: -1.0000  coco/bbox_mAP_m: 0.0000  coco/bbox_mAP_l: 0.0000  data_time: 0.4165  time: 0.6157
+2023/12/04 10:49:43 - mmengine - INFO - The best checkpoint with 0.0000 coco/bbox_mAP at 1 epoch is saved to best_coco_bbox_mAP_epoch_1.pth.
+2023/12/04 10:49:47 - mmengine - INFO - Epoch(train)  [2][ 5/19]  base_lr: 8.0000e-05 lr: 8.0000e-05  eta: 0:35:31  time: 2.8963  data_time: 0.7201  memory: 1420  loss: 1.9782  loss_cls: 0.6506  loss_bbox: 1.3277
+2023/12/04 10:49:50 - mmengine - INFO - Epoch(train)  [2][10/19]  base_lr: 8.0000e-05 lr: 8.0000e-05  eta: 0:30:23  time: 2.4941  data_time: 0.6565  memory: 1420  loss: 2.0184  loss_cls: 0.7413  loss_bbox: 1.2771
+2023/12/04 10:49:53 - mmengine - INFO - Epoch(train)  [2][15/19]  base_lr: 8.0000e-05 lr: 8.0000e-05  eta: 0:26:35  time: 2.1974  data_time: 0.5970  memory: 1420  loss: 2.0276  loss_cls: 0.7695  loss_bbox: 1.2580
+2023/12/04 10:49:54 - mmengine - INFO - Exp name: rtmdet_tiny_1xb4-20e_tire_20231204_104819
+2023/12/04 10:49:55 - mmengine - INFO - Evaluating bbox...
+2023/12/04 10:49:55 - mmengine - INFO - bbox_mAP_copypaste: 0.140 0.309 0.080 -1.000 0.072 0.312
+2023/12/04 10:49:55 - mmengine - INFO - Epoch(val) [2][4/4]    coco/bbox_mAP: 0.1400  coco/bbox_mAP_50: 0.3090  coco/bbox_mAP_75: 0.0800  coco/bbox_mAP_s: -1.0000  coco/bbox_mAP_m: 0.0720  coco/bbox_mAP_l: 0.3120  data_time: 0.1628  time: 0.2184
+2023/12/04 10:49:55 - mmengine - INFO - The previous best checkpoint /home/wzhmiasanmia/hi_workspace/wheel_bolt_recognition/work_dirs/rtmdet_tiny_1xb4-20e_tire/best_coco_bbox_mAP_epoch_1.pth is removed
+2023/12/04 10:49:56 - mmengine - INFO - The best checkpoint with 0.1400 coco/bbox_mAP at 2 epoch is saved to best_coco_bbox_mAP_epoch_2.pth.
+2023/12/04 10:49:59 - mmengine - INFO - Epoch(train)  [3][ 5/19]  base_lr: 8.0000e-05 lr: 8.0000e-05  eta: 0:22:01  time: 1.8437  data_time: 0.5305  memory: 1420  loss: 2.0609  loss_cls: 0.8566  loss_bbox: 1.2043
+2023/12/04 10:50:02 - mmengine - INFO - Epoch(train)  [3][10/19]  base_lr: 8.0000e-05 lr: 8.0000e-05  eta: 0:20:09  time: 1.6983  data_time: 0.4973  memory: 1420  loss: 2.0868  loss_cls: 0.9207  loss_bbox: 1.1661
+2023/12/04 10:50:03 - mmengine - INFO - Epoch(train)  [3][15/19]  base_lr: 8.0000e-05 lr: 8.0000e-05  eta: 0:18:29  time: 0.7001  data_time: 0.4643  memory: 1420  loss: 2.1192  loss_cls: 1.0023  loss_bbox: 1.1169
+2023/12/04 10:50:05 - mmengine - INFO - Exp name: rtmdet_tiny_1xb4-20e_tire_20231204_104819
+2023/12/04 10:50:06 - mmengine - INFO - Evaluating bbox...
+2023/12/04 10:50:06 - mmengine - INFO - bbox_mAP_copypaste: 0.205 0.446 0.146 -1.000 0.108 0.432
+2023/12/04 10:50:06 - mmengine - INFO - Epoch(val) [3][4/4]    coco/bbox_mAP: 0.2050  coco/bbox_mAP_50: 0.4460  coco/bbox_mAP_75: 0.1460  coco/bbox_mAP_s: -1.0000  coco/bbox_mAP_m: 0.1080  coco/bbox_mAP_l: 0.4320  data_time: 0.1130  time: 0.1679
+2023/12/04 10:50:06 - mmengine - INFO - The previous best checkpoint /home/wzhmiasanmia/hi_workspace/wheel_bolt_recognition/work_dirs/rtmdet_tiny_1xb4-20e_tire/best_coco_bbox_mAP_epoch_2.pth is removed
+2023/12/04 10:50:07 - mmengine - INFO - The best checkpoint with 0.2050 coco/bbox_mAP at 3 epoch is saved to best_coco_bbox_mAP_epoch_3.pth.
+2023/12/04 10:50:09 - mmengine - INFO - Epoch(train)  [4][ 5/19]  base_lr: 8.0000e-05 lr: 8.0000e-05  eta: 0:16:22  time: 0.5132  data_time: 0.2869  memory: 1420  loss: 2.1926  loss_cls: 1.2003  loss_bbox: 0.9923
+2023/12/04 10:50:12 - mmengine - INFO - Epoch(train)  [4][10/19]  base_lr: 8.0000e-05 lr: 8.0000e-05  eta: 0:15:25  time: 0.5096  data_time: 0.2834  memory: 1420  loss: 2.2120  loss_cls: 1.2679  loss_bbox: 0.9440
+2023/12/04 10:50:14 - mmengine - INFO - Epoch(train)  [4][15/19]  base_lr: 8.0000e-05 lr: 8.0000e-05  eta: 0:14:41  time: 0.4730  data_time: 0.2560  memory: 1420  loss: 2.2197  loss_cls: 1.3236  loss_bbox: 0.8960
+2023/12/04 10:50:16 - mmengine - INFO - Exp name: rtmdet_tiny_1xb4-20e_tire_20231204_104819
+2023/12/04 10:50:16 - mmengine - INFO - Evaluating bbox...
+2023/12/04 10:50:17 - mmengine - INFO - bbox_mAP_copypaste: 0.269 0.548 0.208 -1.000 0.176 0.528
+2023/12/04 10:50:17 - mmengine - INFO - Epoch(val) [4][4/4]    coco/bbox_mAP: 0.2690  coco/bbox_mAP_50: 0.5480  coco/bbox_mAP_75: 0.2080  coco/bbox_mAP_s: -1.0000  coco/bbox_mAP_m: 0.1760  coco/bbox_mAP_l: 0.5280  data_time: 0.1056  time: 0.1580
+2023/12/04 10:50:17 - mmengine - INFO - The previous best checkpoint /home/wzhmiasanmia/hi_workspace/wheel_bolt_recognition/work_dirs/rtmdet_tiny_1xb4-20e_tire/best_coco_bbox_mAP_epoch_3.pth is removed
+2023/12/04 10:50:18 - mmengine - INFO - The best checkpoint with 0.2690 coco/bbox_mAP at 4 epoch is saved to best_coco_bbox_mAP_epoch_4.pth.
+2023/12/04 10:50:20 - mmengine - INFO - Epoch(train)  [5][ 5/19]  base_lr: 8.0000e-05 lr: 8.0000e-05  eta: 0:13:26  time: 0.4589  data_time: 0.2403  memory: 1420  loss: 2.2105  loss_cls: 1.3832  loss_bbox: 0.8273
+2023/12/04 10:50:22 - mmengine - INFO - Epoch(train)  [5][10/19]  base_lr: 8.0000e-05 lr: 8.0000e-05  eta: 0:12:48  time: 0.4499  data_time: 0.2318  memory: 1420  loss: 2.1863  loss_cls: 1.3979  loss_bbox: 0.7884
+2023/12/04 10:50:25 - mmengine - INFO - Epoch(train)  [5][15/19]  base_lr: 8.0000e-05 lr: 8.0000e-05  eta: 0:12:19  time: 0.4392  data_time: 0.2243  memory: 1420  loss: 2.1536  loss_cls: 1.3943  loss_bbox: 0.7593
+2023/12/04 10:50:26 - mmengine - INFO - Exp name: rtmdet_tiny_1xb4-20e_tire_20231204_104819
+2023/12/04 10:50:26 - mmengine - INFO - Saving checkpoint at 5 epochs
+2023/12/04 10:50:28 - mmengine - INFO - Evaluating bbox...
+2023/12/04 10:50:28 - mmengine - INFO - bbox_mAP_copypaste: 0.289 0.611 0.274 -1.000 0.224 0.514
+2023/12/04 10:50:28 - mmengine - INFO - Epoch(val) [5][4/4]    coco/bbox_mAP: 0.2890  coco/bbox_mAP_50: 0.6110  coco/bbox_mAP_75: 0.2740  coco/bbox_mAP_s: -1.0000  coco/bbox_mAP_m: 0.2240  coco/bbox_mAP_l: 0.5140  data_time: 0.1187  time: 0.2010
+2023/12/04 10:50:28 - mmengine - INFO - The previous best checkpoint /home/wzhmiasanmia/hi_workspace/wheel_bolt_recognition/work_dirs/rtmdet_tiny_1xb4-20e_tire/best_coco_bbox_mAP_epoch_4.pth is removed
+2023/12/04 10:50:29 - mmengine - INFO - The best checkpoint with 0.2890 coco/bbox_mAP at 5 epoch is saved to best_coco_bbox_mAP_epoch_5.pth.
+2023/12/04 10:50:33 - mmengine - INFO - Epoch(train)  [6][ 5/19]  base_lr: 8.0000e-05 lr: 8.0000e-05  eta: 0:11:28  time: 0.4414  data_time: 0.2274  memory: 1420  loss: 2.0251  loss_cls: 1.3012  loss_bbox: 0.7239
+2023/12/04 10:50:35 - mmengine - INFO - Epoch(train)  [6][10/19]  base_lr: 8.0000e-05 lr: 8.0000e-05  eta: 0:11:02  time: 0.4427  data_time: 0.2299  memory: 1420  loss: 1.9406  loss_cls: 1.2273  loss_bbox: 0.7132
+2023/12/04 10:50:37 - mmengine - INFO - Epoch(train)  [6][15/19]  base_lr: 8.0000e-05 lr: 8.0000e-05  eta: 0:10:42  time: 0.4399  data_time: 0.2291  memory: 1420  loss: 1.8589  loss_cls: 1.1520  loss_bbox: 0.7069
+2023/12/04 10:50:39 - mmengine - INFO - Exp name: rtmdet_tiny_1xb4-20e_tire_20231204_104819
+2023/12/04 10:50:40 - mmengine - INFO - Evaluating bbox...
+2023/12/04 10:50:40 - mmengine - INFO - bbox_mAP_copypaste: 0.307 0.656 0.232 -1.000 0.243 0.525
+2023/12/04 10:50:40 - mmengine - INFO - Epoch(val) [6][4/4]    coco/bbox_mAP: 0.3070  coco/bbox_mAP_50: 0.6560  coco/bbox_mAP_75: 0.2320  coco/bbox_mAP_s: -1.0000  coco/bbox_mAP_m: 0.2430  coco/bbox_mAP_l: 0.5250  data_time: 0.1152  time: 0.1666
+2023/12/04 10:50:40 - mmengine - INFO - The previous best checkpoint /home/wzhmiasanmia/hi_workspace/wheel_bolt_recognition/work_dirs/rtmdet_tiny_1xb4-20e_tire/best_coco_bbox_mAP_epoch_5.pth is removed
+2023/12/04 10:50:41 - mmengine - INFO - The best checkpoint with 0.3070 coco/bbox_mAP at 6 epoch is saved to best_coco_bbox_mAP_epoch_6.pth.
+2023/12/04 10:50:45 - mmengine - INFO - Epoch(train)  [7][ 5/19]  base_lr: 8.0000e-05 lr: 8.0000e-05  eta: 0:10:08  time: 0.4442  data_time: 0.2290  memory: 1420  loss: 1.6835  loss_cls: 1.0037  loss_bbox: 0.6799
+2023/12/04 10:50:47 - mmengine - INFO - Epoch(train)  [7][10/19]  base_lr: 8.0000e-05 lr: 8.0000e-05  eta: 0:09:50  time: 0.4463  data_time: 0.2316  memory: 1420  loss: 1.5776  loss_cls: 0.9175  loss_bbox: 0.6602
+2023/12/04 10:50:49 - mmengine - INFO - Epoch(train)  [7][15/19]  base_lr: 8.0000e-05 lr: 8.0000e-05  eta: 0:09:31  time: 0.4251  data_time: 0.2144  memory: 1420  loss: 1.4928  loss_cls: 0.8374  loss_bbox: 0.6554
+2023/12/04 10:50:50 - mmengine - INFO - Exp name: rtmdet_tiny_1xb4-20e_tire_20231204_104819
+2023/12/04 10:50:51 - mmengine - INFO - Evaluating bbox...
+2023/12/04 10:50:51 - mmengine - INFO - bbox_mAP_copypaste: 0.324 0.719 0.228 -1.000 0.261 0.534
+2023/12/04 10:50:51 - mmengine - INFO - Epoch(val) [7][4/4]    coco/bbox_mAP: 0.3240  coco/bbox_mAP_50: 0.7190  coco/bbox_mAP_75: 0.2280  coco/bbox_mAP_s: -1.0000  coco/bbox_mAP_m: 0.2610  coco/bbox_mAP_l: 0.5340  data_time: 0.1177  time: 0.1678
+2023/12/04 10:50:51 - mmengine - INFO - The previous best checkpoint /home/wzhmiasanmia/hi_workspace/wheel_bolt_recognition/work_dirs/rtmdet_tiny_1xb4-20e_tire/best_coco_bbox_mAP_epoch_6.pth is removed
+2023/12/04 10:50:52 - mmengine - INFO - The best checkpoint with 0.3240 coco/bbox_mAP at 7 epoch is saved to best_coco_bbox_mAP_epoch_7.pth.
+2023/12/04 10:50:56 - mmengine - INFO - Epoch(train)  [8][ 5/19]  base_lr: 8.0000e-05 lr: 8.0000e-05  eta: 0:09:05  time: 0.4467  data_time: 0.2362  memory: 1420  loss: 1.3566  loss_cls: 0.7185  loss_bbox: 0.6380
+2023/12/04 10:50:58 - mmengine - INFO - Epoch(train)  [8][10/19]  base_lr: 8.0000e-05 lr: 8.0000e-05  eta: 0:08:50  time: 0.4328  data_time: 0.2240  memory: 1420  loss: 1.2988  loss_cls: 0.6753  loss_bbox: 0.6235
+2023/12/04 10:51:00 - mmengine - INFO - Epoch(train)  [8][15/19]  base_lr: 8.0000e-05 lr: 8.0000e-05  eta: 0:08:37  time: 0.4341  data_time: 0.2299  memory: 1420  loss: 1.2534  loss_cls: 0.6335  loss_bbox: 0.6199
+2023/12/04 10:51:01 - mmengine - INFO - Exp name: rtmdet_tiny_1xb4-20e_tire_20231204_104819
+2023/12/04 10:51:02 - mmengine - INFO - Evaluating bbox...
+2023/12/04 10:51:02 - mmengine - INFO - bbox_mAP_copypaste: 0.356 0.817 0.228 -1.000 0.307 0.513
+2023/12/04 10:51:02 - mmengine - INFO - Epoch(val) [8][4/4]    coco/bbox_mAP: 0.3560  coco/bbox_mAP_50: 0.8170  coco/bbox_mAP_75: 0.2280  coco/bbox_mAP_s: -1.0000  coco/bbox_mAP_m: 0.3070  coco/bbox_mAP_l: 0.5130  data_time: 0.1036  time: 0.1488
+2023/12/04 10:51:02 - mmengine - INFO - The previous best checkpoint /home/wzhmiasanmia/hi_workspace/wheel_bolt_recognition/work_dirs/rtmdet_tiny_1xb4-20e_tire/best_coco_bbox_mAP_epoch_7.pth is removed
+2023/12/04 10:51:03 - mmengine - INFO - The best checkpoint with 0.3560 coco/bbox_mAP at 8 epoch is saved to best_coco_bbox_mAP_epoch_8.pth.
+2023/12/04 10:51:07 - mmengine - INFO - Epoch(train)  [9][ 5/19]  base_lr: 8.0000e-05 lr: 8.0000e-05  eta: 0:08:16  time: 0.4426  data_time: 0.2364  memory: 1420  loss: 1.2147  loss_cls: 0.6063  loss_bbox: 0.6084
+2023/12/04 10:51:09 - mmengine - INFO - Epoch(train)  [9][10/19]  base_lr: 8.0000e-05 lr: 8.0000e-05  eta: 0:08:03  time: 0.4271  data_time: 0.2192  memory: 1420  loss: 1.1825  loss_cls: 0.5862  loss_bbox: 0.5963
+2023/12/04 10:51:11 - mmengine - INFO - Epoch(train)  [9][15/19]  base_lr: 8.0000e-05 lr: 8.0000e-05  eta: 0:07:53  time: 0.4221  data_time: 0.2183  memory: 1420  loss: 1.1725  loss_cls: 0.5702  loss_bbox: 0.6023
+2023/12/04 10:51:13 - mmengine - INFO - Exp name: rtmdet_tiny_1xb4-20e_tire_20231204_104819
+2023/12/04 10:51:14 - mmengine - INFO - Evaluating bbox...
+2023/12/04 10:51:14 - mmengine - INFO - bbox_mAP_copypaste: 0.348 0.821 0.218 -1.000 0.297 0.510
+2023/12/04 10:51:14 - mmengine - INFO - Epoch(val) [9][4/4]    coco/bbox_mAP: 0.3480  coco/bbox_mAP_50: 0.8210  coco/bbox_mAP_75: 0.2180  coco/bbox_mAP_s: -1.0000  coco/bbox_mAP_m: 0.2970  coco/bbox_mAP_l: 0.5100  data_time: 0.1156  time: 0.1697
+2023/12/04 10:51:17 - mmengine - INFO - Epoch(train) [10][ 5/19]  base_lr: 8.0000e-05 lr: 8.0000e-05  eta: 0:07:35  time: 0.4300  data_time: 0.2261  memory: 1420  loss: 1.1636  loss_cls: 0.5621  loss_bbox: 0.6015
+2023/12/04 10:51:18 - mmengine - INFO - Epoch(train) [10][10/19]  base_lr: 8.0000e-05 lr: 8.0000e-05  eta: 0:07:25  time: 0.4351  data_time: 0.2282  memory: 1420  loss: 1.1527  loss_cls: 0.5534  loss_bbox: 0.5994
+2023/12/04 10:51:20 - mmengine - INFO - Epoch(train) [10][15/19]  base_lr: 8.0000e-05 lr: 8.0000e-05  eta: 0:07:15  time: 0.4321  data_time: 0.2273  memory: 1420  loss: 1.1225  loss_cls: 0.5325  loss_bbox: 0.5900
+2023/12/04 10:51:22 - mmengine - INFO - Exp name: rtmdet_tiny_1xb4-20e_tire_20231204_104819
+2023/12/04 10:51:22 - mmengine - INFO - Saving checkpoint at 10 epochs
+2023/12/04 10:51:24 - mmengine - INFO - Evaluating bbox...
+2023/12/04 10:51:24 - mmengine - INFO - bbox_mAP_copypaste: 0.372 0.848 0.254 -1.000 0.337 0.500
+2023/12/04 10:51:24 - mmengine - INFO - Epoch(val) [10][4/4]    coco/bbox_mAP: 0.3720  coco/bbox_mAP_50: 0.8480  coco/bbox_mAP_75: 0.2540  coco/bbox_mAP_s: -1.0000  coco/bbox_mAP_m: 0.3370  coco/bbox_mAP_l: 0.5000  data_time: 0.1095  time: 0.1742
+2023/12/04 10:51:24 - mmengine - INFO - The previous best checkpoint /home/wzhmiasanmia/hi_workspace/wheel_bolt_recognition/work_dirs/rtmdet_tiny_1xb4-20e_tire/best_coco_bbox_mAP_epoch_8.pth is removed
+2023/12/04 10:51:25 - mmengine - INFO - The best checkpoint with 0.3720 coco/bbox_mAP at 10 epoch is saved to best_coco_bbox_mAP_epoch_10.pth.
+2023/12/04 10:51:29 - mmengine - INFO - Epoch(train) [11][ 5/19]  base_lr: 8.0000e-05 lr: 8.0000e-05  eta: 0:07:02  time: 0.4451  data_time: 0.2351  memory: 1420  loss: 1.0732  loss_cls: 0.4971  loss_bbox: 0.5761
+2023/12/04 10:51:31 - mmengine - INFO - Epoch(train) [11][10/19]  base_lr: 8.0000e-05 lr: 8.0000e-05  eta: 0:06:54  time: 0.4407  data_time: 0.2286  memory: 1420  loss: 1.0278  loss_cls: 0.4654  loss_bbox: 0.5624
+2023/12/04 10:51:33 - mmengine - INFO - Epoch(train) [11][15/19]  base_lr: 8.0000e-05 lr: 8.0000e-05  eta: 0:06:46  time: 0.4365  data_time: 0.2240  memory: 1420  loss: 0.9982  loss_cls: 0.4407  loss_bbox: 0.5575
+2023/12/04 10:51:35 - mmengine - INFO - Exp name: rtmdet_tiny_1xb4-20e_tire_20231204_104819
+2023/12/04 10:51:36 - mmengine - INFO - Evaluating bbox...
+2023/12/04 10:51:36 - mmengine - INFO - bbox_mAP_copypaste: 0.351 0.852 0.213 -1.000 0.314 0.477
+2023/12/04 10:51:36 - mmengine - INFO - Epoch(val) [11][4/4]    coco/bbox_mAP: 0.3510  coco/bbox_mAP_50: 0.8520  coco/bbox_mAP_75: 0.2130  coco/bbox_mAP_s: -1.0000  coco/bbox_mAP_m: 0.3140  coco/bbox_mAP_l: 0.4770  data_time: 0.1183  time: 0.1732
+2023/12/04 10:51:39 - mmengine - INFO - Epoch(train) [12][ 5/19]  base_lr: 8.0000e-05 lr: 8.0000e-05  eta: 0:06:35  time: 0.4601  data_time: 0.2481  memory: 1420  loss: 0.9698  loss_cls: 0.4234  loss_bbox: 0.5464
+2023/12/04 10:51:41 - mmengine - INFO - Epoch(train) [12][10/19]  base_lr: 8.0000e-05 lr: 8.0000e-05  eta: 0:06:26  time: 0.4522  data_time: 0.2414  memory: 1420  loss: 0.9618  loss_cls: 0.4205  loss_bbox: 0.5413
+2023/12/04 10:51:43 - mmengine - INFO - Epoch(train) [12][15/19]  base_lr: 8.0000e-05 lr: 8.0000e-05  eta: 0:06:19  time: 0.4452  data_time: 0.2353  memory: 1420  loss: 0.9445  loss_cls: 0.4099  loss_bbox: 0.5345
+2023/12/04 10:51:44 - mmengine - INFO - Exp name: rtmdet_tiny_1xb4-20e_tire_20231204_104819
+2023/12/04 10:51:45 - mmengine - INFO - Evaluating bbox...
+2023/12/04 10:51:45 - mmengine - INFO - bbox_mAP_copypaste: 0.458 0.887 0.387 -1.000 0.445 0.551
+2023/12/04 10:51:45 - mmengine - INFO - Epoch(val) [12][4/4]    coco/bbox_mAP: 0.4580  coco/bbox_mAP_50: 0.8870  coco/bbox_mAP_75: 0.3870  coco/bbox_mAP_s: -1.0000  coco/bbox_mAP_m: 0.4450  coco/bbox_mAP_l: 0.5510  data_time: 0.1048  time: 0.1506
+2023/12/04 10:51:45 - mmengine - INFO - The previous best checkpoint /home/wzhmiasanmia/hi_workspace/wheel_bolt_recognition/work_dirs/rtmdet_tiny_1xb4-20e_tire/best_coco_bbox_mAP_epoch_10.pth is removed
+2023/12/04 10:51:46 - mmengine - INFO - The best checkpoint with 0.4580 coco/bbox_mAP at 12 epoch is saved to best_coco_bbox_mAP_epoch_12.pth.
+2023/12/04 10:51:51 - mmengine - INFO - Epoch(train) [13][ 5/19]  base_lr: 8.0000e-05 lr: 8.0000e-05  eta: 0:06:09  time: 0.4591  data_time: 0.2456  memory: 1420  loss: 0.9184  loss_cls: 0.3962  loss_bbox: 0.5222
+2023/12/04 10:51:52 - mmengine - INFO - Epoch(train) [13][10/19]  base_lr: 8.0000e-05 lr: 8.0000e-05  eta: 0:06:01  time: 0.4561  data_time: 0.2394  memory: 1420  loss: 0.9194  loss_cls: 0.3936  loss_bbox: 0.5257
+2023/12/04 10:51:55 - mmengine - INFO - Epoch(train) [13][15/19]  base_lr: 8.0000e-05 lr: 8.0000e-05  eta: 0:05:55  time: 0.4347  data_time: 0.2205  memory: 1420  loss: 0.9094  loss_cls: 0.3845  loss_bbox: 0.5250
+2023/12/04 10:51:56 - mmengine - INFO - Exp name: rtmdet_tiny_1xb4-20e_tire_20231204_104819
+2023/12/04 10:51:57 - mmengine - INFO - Evaluating bbox...
+2023/12/04 10:51:57 - mmengine - INFO - bbox_mAP_copypaste: 0.410 0.905 0.299 -1.000 0.390 0.499
+2023/12/04 10:51:57 - mmengine - INFO - Epoch(val) [13][4/4]    coco/bbox_mAP: 0.4100  coco/bbox_mAP_50: 0.9050  coco/bbox_mAP_75: 0.2990  coco/bbox_mAP_s: -1.0000  coco/bbox_mAP_m: 0.3900  coco/bbox_mAP_l: 0.4990  data_time: 0.1040  time: 0.1536
+2023/12/04 10:51:59 - mmengine - INFO - Epoch(train) [14][ 5/19]  base_lr: 8.0000e-05 lr: 8.0000e-05  eta: 0:05:44  time: 0.4458  data_time: 0.2301  memory: 1420  loss: 0.9201  loss_cls: 0.3881  loss_bbox: 0.5320
+2023/12/04 10:52:01 - mmengine - INFO - Epoch(train) [14][10/19]  base_lr: 8.0000e-05 lr: 8.0000e-05  eta: 0:05:38  time: 0.4417  data_time: 0.2275  memory: 1420  loss: 0.9225  loss_cls: 0.3912  loss_bbox: 0.5313
+2023/12/04 10:52:04 - mmengine - INFO - Epoch(train) [14][15/19]  base_lr: 8.0000e-05 lr: 8.0000e-05  eta: 0:05:33  time: 0.4256  data_time: 0.2092  memory: 1420  loss: 0.9081  loss_cls: 0.3764  loss_bbox: 0.5317
+2023/12/04 10:52:05 - mmengine - INFO - Exp name: rtmdet_tiny_1xb4-20e_tire_20231204_104819
+2023/12/04 10:52:06 - mmengine - INFO - Evaluating bbox...
+2023/12/04 10:52:06 - mmengine - INFO - bbox_mAP_copypaste: 0.466 0.903 0.367 -1.000 0.445 0.561
+2023/12/04 10:52:06 - mmengine - INFO - Epoch(val) [14][4/4]    coco/bbox_mAP: 0.4660  coco/bbox_mAP_50: 0.9030  coco/bbox_mAP_75: 0.3670  coco/bbox_mAP_s: -1.0000  coco/bbox_mAP_m: 0.4450  coco/bbox_mAP_l: 0.5610  data_time: 0.1047  time: 0.1599
+2023/12/04 10:52:06 - mmengine - INFO - The previous best checkpoint /home/wzhmiasanmia/hi_workspace/wheel_bolt_recognition/work_dirs/rtmdet_tiny_1xb4-20e_tire/best_coco_bbox_mAP_epoch_12.pth is removed
+2023/12/04 10:52:07 - mmengine - INFO - The best checkpoint with 0.4660 coco/bbox_mAP at 14 epoch is saved to best_coco_bbox_mAP_epoch_14.pth.
+2023/12/04 10:52:11 - mmengine - INFO - Epoch(train) [15][ 5/19]  base_lr: 8.0000e-05 lr: 8.0000e-05  eta: 0:05:23  time: 0.4418  data_time: 0.2180  memory: 1420  loss: 0.8983  loss_cls: 0.3731  loss_bbox: 0.5253
+2023/12/04 10:52:13 - mmengine - INFO - Epoch(train) [15][10/19]  base_lr: 8.0000e-05 lr: 8.0000e-05  eta: 0:05:18  time: 0.4361  data_time: 0.2122  memory: 1420  loss: 0.8795  loss_cls: 0.3580  loss_bbox: 0.5214
+2023/12/04 10:52:15 - mmengine - INFO - Epoch(train) [15][15/19]  base_lr: 8.0000e-05 lr: 8.0000e-05  eta: 0:05:12  time: 0.4180  data_time: 0.2003  memory: 1420  loss: 0.8894  loss_cls: 0.3634  loss_bbox: 0.5260
+2023/12/04 10:52:16 - mmengine - INFO - Exp name: rtmdet_tiny_1xb4-20e_tire_20231204_104819
+2023/12/04 10:52:16 - mmengine - INFO - Saving checkpoint at 15 epochs
+2023/12/04 10:52:18 - mmengine - INFO - Evaluating bbox...
+2023/12/04 10:52:18 - mmengine - INFO - bbox_mAP_copypaste: 0.447 0.911 0.352 -1.000 0.432 0.530
+2023/12/04 10:52:18 - mmengine - INFO - Epoch(val) [15][4/4]    coco/bbox_mAP: 0.4470  coco/bbox_mAP_50: 0.9110  coco/bbox_mAP_75: 0.3520  coco/bbox_mAP_s: -1.0000  coco/bbox_mAP_m: 0.4320  coco/bbox_mAP_l: 0.5300  data_time: 0.1097  time: 0.1800
+2023/12/04 10:52:21 - mmengine - INFO - Epoch(train) [16][ 5/19]  base_lr: 8.0000e-05 lr: 8.0000e-05  eta: 0:05:04  time: 0.4409  data_time: 0.2233  memory: 1420  loss: 0.8906  loss_cls: 0.3681  loss_bbox: 0.5226
+2023/12/04 10:52:23 - mmengine - INFO - Epoch(train) [16][10/19]  base_lr: 8.0000e-05 lr: 8.0000e-05  eta: 0:04:58  time: 0.4254  data_time: 0.2110  memory: 1420  loss: 0.8917  loss_cls: 0.3694  loss_bbox: 0.5222
+2023/12/04 10:52:25 - mmengine - INFO - Epoch(train) [16][15/19]  base_lr: 8.0000e-05 lr: 8.0000e-05  eta: 0:04:53  time: 0.4180  data_time: 0.2042  memory: 1420  loss: 0.8787  loss_cls: 0.3641  loss_bbox: 0.5146
+2023/12/04 10:52:26 - mmengine - INFO - Exp name: rtmdet_tiny_1xb4-20e_tire_20231204_104819
+2023/12/04 10:52:27 - mmengine - INFO - Evaluating bbox...
+2023/12/04 10:52:27 - mmengine - INFO - bbox_mAP_copypaste: 0.444 0.911 0.353 -1.000 0.426 0.523
+2023/12/04 10:52:27 - mmengine - INFO - Epoch(val) [16][4/4]    coco/bbox_mAP: 0.4440  coco/bbox_mAP_50: 0.9110  coco/bbox_mAP_75: 0.3530  coco/bbox_mAP_s: -1.0000  coco/bbox_mAP_m: 0.4260  coco/bbox_mAP_l: 0.5230  data_time: 0.1114  time: 0.1631
+2023/12/04 10:52:29 - mmengine - INFO - Epoch(train) [17][ 5/19]  base_lr: 8.0000e-05 lr: 8.0000e-05  eta: 0:04:43  time: 0.4174  data_time: 0.2085  memory: 1420  loss: 0.8600  loss_cls: 0.3574  loss_bbox: 0.5026
+2023/12/04 10:52:31 - mmengine - INFO - Epoch(train) [17][10/19]  base_lr: 8.0000e-05 lr: 8.0000e-05  eta: 0:04:39  time: 0.4145  data_time: 0.2071  memory: 1420  loss: 0.8557  loss_cls: 0.3568  loss_bbox: 0.4989
+2023/12/04 10:52:33 - mmengine - INFO - Epoch(train) [17][15/19]  base_lr: 8.0000e-05 lr: 8.0000e-05  eta: 0:04:34  time: 0.4048  data_time: 0.2007  memory: 1420  loss: 0.8488  loss_cls: 0.3553  loss_bbox: 0.4935
+2023/12/04 10:52:35 - mmengine - INFO - Exp name: rtmdet_tiny_1xb4-20e_tire_20231204_104819
+2023/12/04 10:52:36 - mmengine - INFO - Evaluating bbox...
+2023/12/04 10:52:36 - mmengine - INFO - bbox_mAP_copypaste: 0.458 0.931 0.343 -1.000 0.459 0.498
+2023/12/04 10:52:36 - mmengine - INFO - Epoch(val) [17][4/4]    coco/bbox_mAP: 0.4580  coco/bbox_mAP_50: 0.9310  coco/bbox_mAP_75: 0.3430  coco/bbox_mAP_s: -1.0000  coco/bbox_mAP_m: 0.4590  coco/bbox_mAP_l: 0.4980  data_time: 0.1051  time: 0.1647
+2023/12/04 10:52:38 - mmengine - INFO - Epoch(train) [18][ 5/19]  base_lr: 8.0000e-05 lr: 8.0000e-05  eta: 0:04:27  time: 0.4146  data_time: 0.2101  memory: 1420  loss: 0.8538  loss_cls: 0.3599  loss_bbox: 0.4939
+2023/12/04 10:52:40 - mmengine - INFO - Epoch(train) [18][10/19]  base_lr: 8.0000e-05 lr: 8.0000e-05  eta: 0:04:22  time: 0.4011  data_time: 0.1987  memory: 1420  loss: 0.8473  loss_cls: 0.3606  loss_bbox: 0.4867
+2023/12/04 10:52:42 - mmengine - INFO - Epoch(train) [18][15/19]  base_lr: 8.0000e-05 lr: 8.0000e-05  eta: 0:04:18  time: 0.4020  data_time: 0.1983  memory: 1420  loss: 0.8413  loss_cls: 0.3575  loss_bbox: 0.4839
+2023/12/04 10:52:44 - mmengine - INFO - Exp name: rtmdet_tiny_1xb4-20e_tire_20231204_104819
+2023/12/04 10:52:45 - mmengine - INFO - Evaluating bbox...
+2023/12/04 10:52:45 - mmengine - INFO - bbox_mAP_copypaste: 0.434 0.920 0.353 -1.000 0.432 0.473
+2023/12/04 10:52:45 - mmengine - INFO - Epoch(val) [18][4/4]    coco/bbox_mAP: 0.4340  coco/bbox_mAP_50: 0.9200  coco/bbox_mAP_75: 0.3530  coco/bbox_mAP_s: -1.0000  coco/bbox_mAP_m: 0.4320  coco/bbox_mAP_l: 0.4730  data_time: 0.1161  time: 0.1734
+2023/12/04 10:52:47 - mmengine - INFO - Epoch(train) [19][ 5/19]  base_lr: 8.0000e-05 lr: 8.0000e-05  eta: 0:04:10  time: 0.4161  data_time: 0.2113  memory: 1420  loss: 0.8507  loss_cls: 0.3602  loss_bbox: 0.4905
+2023/12/04 10:52:49 - mmengine - INFO - Epoch(train) [19][10/19]  base_lr: 8.0000e-05 lr: 8.0000e-05  eta: 0:04:06  time: 0.4173  data_time: 0.2119  memory: 1420  loss: 0.8473  loss_cls: 0.3562  loss_bbox: 0.4911
+2023/12/04 10:52:52 - mmengine - INFO - Epoch(train) [19][15/19]  base_lr: 8.0000e-05 lr: 8.0000e-05  eta: 0:04:02  time: 0.4282  data_time: 0.2217  memory: 1420  loss: 0.8567  loss_cls: 0.3595  loss_bbox: 0.4972
+2023/12/04 10:52:53 - mmengine - INFO - Exp name: rtmdet_tiny_1xb4-20e_tire_20231204_104819
+2023/12/04 10:52:54 - mmengine - INFO - Evaluating bbox...
+2023/12/04 10:52:54 - mmengine - INFO - bbox_mAP_copypaste: 0.486 0.920 0.434 -1.000 0.473 0.544
+2023/12/04 10:52:54 - mmengine - INFO - Epoch(val) [19][4/4]    coco/bbox_mAP: 0.4860  coco/bbox_mAP_50: 0.9200  coco/bbox_mAP_75: 0.4340  coco/bbox_mAP_s: -1.0000  coco/bbox_mAP_m: 0.4730  coco/bbox_mAP_l: 0.5440  data_time: 0.1096  time: 0.1637
+2023/12/04 10:52:54 - mmengine - INFO - The previous best checkpoint /home/wzhmiasanmia/hi_workspace/wheel_bolt_recognition/work_dirs/rtmdet_tiny_1xb4-20e_tire/best_coco_bbox_mAP_epoch_14.pth is removed
+2023/12/04 10:52:55 - mmengine - INFO - The best checkpoint with 0.4860 coco/bbox_mAP at 19 epoch is saved to best_coco_bbox_mAP_epoch_19.pth.
+2023/12/04 10:52:59 - mmengine - INFO - Epoch(train) [20][ 5/19]  base_lr: 8.0000e-05 lr: 8.0000e-05  eta: 0:03:56  time: 0.4368  data_time: 0.2285  memory: 1420  loss: 0.8463  loss_cls: 0.3545  loss_bbox: 0.4918
+2023/12/04 10:53:01 - mmengine - INFO - Epoch(train) [20][10/19]  base_lr: 8.0000e-05 lr: 8.0000e-05  eta: 0:03:52  time: 0.4391  data_time: 0.2307  memory: 1420  loss: 0.8384  loss_cls: 0.3506  loss_bbox: 0.4878
+2023/12/04 10:53:03 - mmengine - INFO - Epoch(train) [20][15/19]  base_lr: 8.0000e-05 lr: 8.0000e-05  eta: 0:03:48  time: 0.4244  data_time: 0.2133  memory: 1420  loss: 0.8418  loss_cls: 0.3500  loss_bbox: 0.4918
+2023/12/04 10:53:04 - mmengine - INFO - Exp name: rtmdet_tiny_1xb4-20e_tire_20231204_104819
+2023/12/04 10:53:04 - mmengine - INFO - Saving checkpoint at 20 epochs
+2023/12/04 10:53:06 - mmengine - INFO - Evaluating bbox...
+2023/12/04 10:53:07 - mmengine - INFO - bbox_mAP_copypaste: 0.464 0.916 0.373 -1.000 0.447 0.530
+2023/12/04 10:53:07 - mmengine - INFO - Epoch(val) [20][4/4]    coco/bbox_mAP: 0.4640  coco/bbox_mAP_50: 0.9160  coco/bbox_mAP_75: 0.3730  coco/bbox_mAP_s: -1.0000  coco/bbox_mAP_m: 0.4470  coco/bbox_mAP_l: 0.5300  data_time: 0.1181  time: 0.1836
+2023/12/04 10:53:09 - mmengine - INFO - Epoch(train) [21][ 5/19]  base_lr: 7.9979e-05 lr: 7.9979e-05  eta: 0:03:41  time: 0.4479  data_time: 0.2399  memory: 1420  loss: 0.8318  loss_cls: 0.3427  loss_bbox: 0.4891
+2023/12/04 10:53:12 - mmengine - INFO - Epoch(train) [21][10/19]  base_lr: 7.9895e-05 lr: 7.9895e-05  eta: 0:03:37  time: 0.4433  data_time: 0.2372  memory: 1420  loss: 0.8312  loss_cls: 0.3462  loss_bbox: 0.4850
+2023/12/04 10:53:14 - mmengine - INFO - Epoch(train) [21][15/19]  base_lr: 7.9746e-05 lr: 7.9746e-05  eta: 0:03:34  time: 0.4440  data_time: 0.2403  memory: 1420  loss: 0.8113  loss_cls: 0.3348  loss_bbox: 0.4765
+2023/12/04 10:53:15 - mmengine - INFO - Exp name: rtmdet_tiny_1xb4-20e_tire_20231204_104819
+2023/12/04 10:53:16 - mmengine - INFO - Evaluating bbox...
+2023/12/04 10:53:16 - mmengine - INFO - bbox_mAP_copypaste: 0.538 0.931 0.615 -1.000 0.514 0.621
+2023/12/04 10:53:16 - mmengine - INFO - Epoch(val) [21][4/4]    coco/bbox_mAP: 0.5380  coco/bbox_mAP_50: 0.9310  coco/bbox_mAP_75: 0.6150  coco/bbox_mAP_s: -1.0000  coco/bbox_mAP_m: 0.5140  coco/bbox_mAP_l: 0.6210  data_time: 0.1120  time: 0.1661
+2023/12/04 10:53:16 - mmengine - INFO - The previous best checkpoint /home/wzhmiasanmia/hi_workspace/wheel_bolt_recognition/work_dirs/rtmdet_tiny_1xb4-20e_tire/best_coco_bbox_mAP_epoch_19.pth is removed
+2023/12/04 10:53:17 - mmengine - INFO - The best checkpoint with 0.5380 coco/bbox_mAP at 21 epoch is saved to best_coco_bbox_mAP_epoch_21.pth.
+2023/12/04 10:53:21 - mmengine - INFO - Epoch(train) [22][ 5/19]  base_lr: 7.9315e-05 lr: 7.9315e-05  eta: 0:03:27  time: 0.4398  data_time: 0.2330  memory: 1420  loss: 0.7953  loss_cls: 0.3236  loss_bbox: 0.4717
+2023/12/04 10:53:23 - mmengine - INFO - Epoch(train) [22][10/19]  base_lr: 7.8986e-05 lr: 7.8986e-05  eta: 0:03:24  time: 0.4375  data_time: 0.2302  memory: 1420  loss: 0.8075  loss_cls: 0.3333  loss_bbox: 0.4742
+2023/12/04 10:53:25 - mmengine - INFO - Epoch(train) [22][15/19]  base_lr: 7.8595e-05 lr: 7.8595e-05  eta: 0:03:20  time: 0.4288  data_time: 0.2238  memory: 1420  loss: 0.8226  loss_cls: 0.3437  loss_bbox: 0.4790
+2023/12/04 10:53:26 - mmengine - INFO - Exp name: rtmdet_tiny_1xb4-20e_tire_20231204_104819
+2023/12/04 10:53:27 - mmengine - INFO - Evaluating bbox...
+2023/12/04 10:53:27 - mmengine - INFO - bbox_mAP_copypaste: 0.526 0.931 0.610 -1.000 0.515 0.583
+2023/12/04 10:53:27 - mmengine - INFO - Epoch(val) [22][4/4]    coco/bbox_mAP: 0.5260  coco/bbox_mAP_50: 0.9310  coco/bbox_mAP_75: 0.6100  coco/bbox_mAP_s: -1.0000  coco/bbox_mAP_m: 0.5150  coco/bbox_mAP_l: 0.5830  data_time: 0.1208  time: 0.1781
+2023/12/04 10:53:30 - mmengine - INFO - Epoch(train) [23][ 5/19]  base_lr: 7.7732e-05 lr: 7.7732e-05  eta: 0:03:14  time: 0.4350  data_time: 0.2337  memory: 1420  loss: 0.8059  loss_cls: 0.3297  loss_bbox: 0.4761
+2023/12/04 10:53:31 - mmengine - INFO - Epoch(train) [23][10/19]  base_lr: 7.7167e-05 lr: 7.7167e-05  eta: 0:03:10  time: 0.4269  data_time: 0.2250  memory: 1420  loss: 0.8058  loss_cls: 0.3308  loss_bbox: 0.4750
+2023/12/04 10:53:33 - mmengine - INFO - Epoch(train) [23][15/19]  base_lr: 7.6542e-05 lr: 7.6542e-05  eta: 0:03:06  time: 0.4149  data_time: 0.2124  memory: 1420  loss: 0.8087  loss_cls: 0.3312  loss_bbox: 0.4776
+2023/12/04 10:53:35 - mmengine - INFO - Exp name: rtmdet_tiny_1xb4-20e_tire_20231204_104819
+2023/12/04 10:53:35 - mmengine - INFO - Evaluating bbox...
+2023/12/04 10:53:36 - mmengine - INFO - bbox_mAP_copypaste: 0.544 0.933 0.617 -1.000 0.523 0.627
+2023/12/04 10:53:36 - mmengine - INFO - Epoch(val) [23][4/4]    coco/bbox_mAP: 0.5440  coco/bbox_mAP_50: 0.9330  coco/bbox_mAP_75: 0.6170  coco/bbox_mAP_s: -1.0000  coco/bbox_mAP_m: 0.5230  coco/bbox_mAP_l: 0.6270  data_time: 0.1195  time: 0.1796
+2023/12/04 10:53:36 - mmengine - INFO - The previous best checkpoint /home/wzhmiasanmia/hi_workspace/wheel_bolt_recognition/work_dirs/rtmdet_tiny_1xb4-20e_tire/best_coco_bbox_mAP_epoch_21.pth is removed
+2023/12/04 10:53:36 - mmengine - INFO - The best checkpoint with 0.5440 coco/bbox_mAP at 23 epoch is saved to best_coco_bbox_mAP_epoch_23.pth.
+2023/12/04 10:53:40 - mmengine - INFO - Epoch(train) [24][ 5/19]  base_lr: 7.5269e-05 lr: 7.5269e-05  eta: 0:03:00  time: 0.4173  data_time: 0.2103  memory: 1420  loss: 0.7983  loss_cls: 0.3228  loss_bbox: 0.4754
+2023/12/04 10:53:42 - mmengine - INFO - Epoch(train) [24][10/19]  base_lr: 7.4482e-05 lr: 7.4482e-05  eta: 0:02:57  time: 0.4159  data_time: 0.2104  memory: 1420  loss: 0.7836  loss_cls: 0.3176  loss_bbox: 0.4660
+2023/12/04 10:53:44 - mmengine - INFO - Epoch(train) [24][15/19]  base_lr: 7.3639e-05 lr: 7.3639e-05  eta: 0:02:53  time: 0.4054  data_time: 0.2042  memory: 1420  loss: 0.7882  loss_cls: 0.3237  loss_bbox: 0.4645
+2023/12/04 10:53:46 - mmengine - INFO - Exp name: rtmdet_tiny_1xb4-20e_tire_20231204_104819
+2023/12/04 10:53:46 - mmengine - INFO - Evaluating bbox...
+2023/12/04 10:53:47 - mmengine - INFO - bbox_mAP_copypaste: 0.496 0.923 0.435 -1.000 0.481 0.558
+2023/12/04 10:53:47 - mmengine - INFO - Epoch(val) [24][4/4]    coco/bbox_mAP: 0.4960  coco/bbox_mAP_50: 0.9230  coco/bbox_mAP_75: 0.4350  coco/bbox_mAP_s: -1.0000  coco/bbox_mAP_m: 0.4810  coco/bbox_mAP_l: 0.5580  data_time: 0.1092  time: 0.1583
+2023/12/04 10:53:49 - mmengine - INFO - Epoch(train) [25][ 5/19]  base_lr: 7.1987e-05 lr: 7.1987e-05  eta: 0:02:48  time: 0.4166  data_time: 0.2141  memory: 1420  loss: 0.7705  loss_cls: 0.3107  loss_bbox: 0.4597
+2023/12/04 10:53:52 - mmengine - INFO - Epoch(train) [25][10/19]  base_lr: 7.0997e-05 lr: 7.0997e-05  eta: 0:02:45  time: 0.4258  data_time: 0.2236  memory: 1420  loss: 0.7618  loss_cls: 0.3086  loss_bbox: 0.4532
+2023/12/04 10:53:54 - mmengine - INFO - Epoch(train) [25][15/19]  base_lr: 6.9958e-05 lr: 6.9958e-05  eta: 0:02:42  time: 0.4281  data_time: 0.2242  memory: 1420  loss: 0.7752  loss_cls: 0.3158  loss_bbox: 0.4594
+2023/12/04 10:53:55 - mmengine - INFO - Exp name: rtmdet_tiny_1xb4-20e_tire_20231204_104819
+2023/12/04 10:53:55 - mmengine - INFO - Saving checkpoint at 25 epochs
+2023/12/04 10:53:57 - mmengine - INFO - Evaluating bbox...
+2023/12/04 10:53:57 - mmengine - INFO - bbox_mAP_copypaste: 0.552 0.942 0.619 -1.000 0.535 0.624
+2023/12/04 10:53:57 - mmengine - INFO - Epoch(val) [25][4/4]    coco/bbox_mAP: 0.5520  coco/bbox_mAP_50: 0.9420  coco/bbox_mAP_75: 0.6190  coco/bbox_mAP_s: -1.0000  coco/bbox_mAP_m: 0.5350  coco/bbox_mAP_l: 0.6240  data_time: 0.1117  time: 0.1774
+2023/12/04 10:53:57 - mmengine - INFO - The previous best checkpoint /home/wzhmiasanmia/hi_workspace/wheel_bolt_recognition/work_dirs/rtmdet_tiny_1xb4-20e_tire/best_coco_bbox_mAP_epoch_23.pth is removed
+2023/12/04 10:53:58 - mmengine - INFO - The best checkpoint with 0.5520 coco/bbox_mAP at 25 epoch is saved to best_coco_bbox_mAP_epoch_25.pth.
+2023/12/04 10:54:02 - mmengine - INFO - Epoch(train) [26][ 5/19]  base_lr: 6.7967e-05 lr: 6.7967e-05  eta: 0:02:36  time: 0.4336  data_time: 0.2229  memory: 1420  loss: 0.7712  loss_cls: 0.3142  loss_bbox: 0.4570
+2023/12/04 10:54:04 - mmengine - INFO - Epoch(train) [26][10/19]  base_lr: 6.6798e-05 lr: 6.6798e-05  eta: 0:02:33  time: 0.4462  data_time: 0.2348  memory: 1420  loss: 0.7706  loss_cls: 0.3125  loss_bbox: 0.4581
+2023/12/04 10:54:07 - mmengine - INFO - Epoch(train) [26][15/19]  base_lr: 6.5587e-05 lr: 6.5587e-05  eta: 0:02:30  time: 0.4476  data_time: 0.2384  memory: 1420  loss: 0.7818  loss_cls: 0.3203  loss_bbox: 0.4615
+2023/12/04 10:54:08 - mmengine - INFO - Exp name: rtmdet_tiny_1xb4-20e_tire_20231204_104819
+2023/12/04 10:54:09 - mmengine - INFO - Evaluating bbox...
+2023/12/04 10:54:09 - mmengine - INFO - bbox_mAP_copypaste: 0.478 0.921 0.370 -1.000 0.458 0.554
+2023/12/04 10:54:09 - mmengine - INFO - Epoch(val) [26][4/4]    coco/bbox_mAP: 0.4780  coco/bbox_mAP_50: 0.9210  coco/bbox_mAP_75: 0.3700  coco/bbox_mAP_s: -1.0000  coco/bbox_mAP_m: 0.4580  coco/bbox_mAP_l: 0.5540  data_time: 0.1182  time: 0.1685
+2023/12/04 10:54:11 - mmengine - INFO - Epoch(train) [27][ 5/19]  base_lr: 6.3307e-05 lr: 6.3307e-05  eta: 0:02:24  time: 0.4422  data_time: 0.2367  memory: 1420  loss: 0.7911  loss_cls: 0.3290  loss_bbox: 0.4621
+2023/12/04 10:54:14 - mmengine - INFO - Epoch(train) [27][10/19]  base_lr: 6.1989e-05 lr: 6.1989e-05  eta: 0:02:21  time: 0.4570  data_time: 0.2516  memory: 1420  loss: 0.7846  loss_cls: 0.3267  loss_bbox: 0.4580
+2023/12/04 10:54:16 - mmengine - INFO - Epoch(train) [27][15/19]  base_lr: 6.0636e-05 lr: 6.0636e-05  eta: 0:02:18  time: 0.4395  data_time: 0.2324  memory: 1420  loss: 0.7826  loss_cls: 0.3236  loss_bbox: 0.4591
+2023/12/04 10:54:17 - mmengine - INFO - Exp name: rtmdet_tiny_1xb4-20e_tire_20231204_104819
+2023/12/04 10:54:18 - mmengine - INFO - Evaluating bbox...
+2023/12/04 10:54:18 - mmengine - INFO - bbox_mAP_copypaste: 0.526 0.938 0.514 -1.000 0.515 0.587
+2023/12/04 10:54:18 - mmengine - INFO - Epoch(val) [27][4/4]    coco/bbox_mAP: 0.5260  coco/bbox_mAP_50: 0.9380  coco/bbox_mAP_75: 0.5140  coco/bbox_mAP_s: -1.0000  coco/bbox_mAP_m: 0.5150  coco/bbox_mAP_l: 0.5870  data_time: 0.1139  time: 0.1632
+2023/12/04 10:54:21 - mmengine - INFO - Epoch(train) [28][ 5/19]  base_lr: 5.8123e-05 lr: 5.8123e-05  eta: 0:02:13  time: 0.4455  data_time: 0.2388  memory: 1420  loss: 0.7967  loss_cls: 0.3310  loss_bbox: 0.4657
+2023/12/04 10:54:23 - mmengine - INFO - Epoch(train) [28][10/19]  base_lr: 5.6687e-05 lr: 5.6687e-05  eta: 0:02:09  time: 0.4410  data_time: 0.2338  memory: 1420  loss: 0.7881  loss_cls: 0.3283  loss_bbox: 0.4598
+2023/12/04 10:54:25 - mmengine - INFO - Epoch(train) [28][15/19]  base_lr: 5.5226e-05 lr: 5.5226e-05  eta: 0:02:06  time: 0.4367  data_time: 0.2373  memory: 1420  loss: 0.7861  loss_cls: 0.3244  loss_bbox: 0.4617
+2023/12/04 10:54:26 - mmengine - INFO - Exp name: rtmdet_tiny_1xb4-20e_tire_20231204_104819
+2023/12/04 10:54:27 - mmengine - INFO - Evaluating bbox...
+2023/12/04 10:54:27 - mmengine - INFO - bbox_mAP_copypaste: 0.506 0.944 0.423 -1.000 0.494 0.558
+2023/12/04 10:54:27 - mmengine - INFO - Epoch(val) [28][4/4]    coco/bbox_mAP: 0.5060  coco/bbox_mAP_50: 0.9440  coco/bbox_mAP_75: 0.4230  coco/bbox_mAP_s: -1.0000  coco/bbox_mAP_m: 0.4940  coco/bbox_mAP_l: 0.5580  data_time: 0.1097  time: 0.1635
+2023/12/04 10:54:30 - mmengine - INFO - Epoch(train) [29][ 5/19]  base_lr: 5.2541e-05 lr: 5.2541e-05  eta: 0:02:01  time: 0.4313  data_time: 0.2361  memory: 1420  loss: 0.7764  loss_cls: 0.3248  loss_bbox: 0.4516
+2023/12/04 10:54:31 - mmengine - INFO - Epoch(train) [29][10/19]  base_lr: 5.1024e-05 lr: 5.1024e-05  eta: 0:01:58  time: 0.4183  data_time: 0.2246  memory: 1420  loss: 0.7705  loss_cls: 0.3219  loss_bbox: 0.4487
+2023/12/04 10:54:34 - mmengine - INFO - Epoch(train) [29][15/19]  base_lr: 4.9490e-05 lr: 4.9490e-05  eta: 0:01:55  time: 0.4225  data_time: 0.2283  memory: 1420  loss: 0.7608  loss_cls: 0.3160  loss_bbox: 0.4447
+2023/12/04 10:54:35 - mmengine - INFO - Exp name: rtmdet_tiny_1xb4-20e_tire_20231204_104819
+2023/12/04 10:54:36 - mmengine - INFO - Evaluating bbox...
+2023/12/04 10:54:36 - mmengine - INFO - bbox_mAP_copypaste: 0.548 0.941 0.569 -1.000 0.519 0.634
+2023/12/04 10:54:36 - mmengine - INFO - Epoch(val) [29][4/4]    coco/bbox_mAP: 0.5480  coco/bbox_mAP_50: 0.9410  coco/bbox_mAP_75: 0.5690  coco/bbox_mAP_s: -1.0000  coco/bbox_mAP_m: 0.5190  coco/bbox_mAP_l: 0.6340  data_time: 0.0989  time: 0.1559
+2023/12/04 10:54:39 - mmengine - INFO - Epoch(train) [30][ 5/19]  base_lr: 4.6700e-05 lr: 4.6700e-05  eta: 0:01:50  time: 0.4262  data_time: 0.2328  memory: 1420  loss: 0.7506  loss_cls: 0.3070  loss_bbox: 0.4437
+2023/12/04 10:54:41 - mmengine - INFO - Epoch(train) [30][10/19]  base_lr: 4.5138e-05 lr: 4.5138e-05  eta: 0:01:47  time: 0.4214  data_time: 0.2291  memory: 1420  loss: 0.7419  loss_cls: 0.3007  loss_bbox: 0.4412
+2023/12/04 10:54:43 - mmengine - INFO - Epoch(train) [30][15/19]  base_lr: 4.3570e-05 lr: 4.3570e-05  eta: 0:01:44  time: 0.4089  data_time: 0.2195  memory: 1420  loss: 0.7307  loss_cls: 0.2971  loss_bbox: 0.4336
+2023/12/04 10:54:44 - mmengine - INFO - Exp name: rtmdet_tiny_1xb4-20e_tire_20231204_104819
+2023/12/04 10:54:44 - mmengine - INFO - Saving checkpoint at 30 epochs
+2023/12/04 10:54:46 - mmengine - INFO - Evaluating bbox...
+2023/12/04 10:54:46 - mmengine - INFO - bbox_mAP_copypaste: 0.521 0.938 0.486 -1.000 0.502 0.590
+2023/12/04 10:54:46 - mmengine - INFO - Epoch(val) [30][4/4]    coco/bbox_mAP: 0.5210  coco/bbox_mAP_50: 0.9380  coco/bbox_mAP_75: 0.4860  coco/bbox_mAP_s: -1.0000  coco/bbox_mAP_m: 0.5020  coco/bbox_mAP_l: 0.5900  data_time: 0.1086  time: 0.1703
+2023/12/04 10:54:49 - mmengine - INFO - Epoch(train) [31][ 5/19]  base_lr: 4.0744e-05 lr: 4.0744e-05  eta: 0:01:39  time: 0.4241  data_time: 0.2350  memory: 1420  loss: 0.7154  loss_cls: 0.2884  loss_bbox: 0.4270
+2023/12/04 10:54:51 - mmengine - INFO - Epoch(train) [31][10/19]  base_lr: 3.9175e-05 lr: 3.9175e-05  eta: 0:01:36  time: 0.4139  data_time: 0.2225  memory: 1420  loss: 0.7122  loss_cls: 0.2904  loss_bbox: 0.4217
+2023/12/04 10:54:53 - mmengine - INFO - Epoch(train) [31][15/19]  base_lr: 3.7612e-05 lr: 3.7612e-05  eta: 0:01:33  time: 0.4172  data_time: 0.2238  memory: 1420  loss: 0.7204  loss_cls: 0.2927  loss_bbox: 0.4276
+2023/12/04 10:54:54 - mmengine - INFO - Exp name: rtmdet_tiny_1xb4-20e_tire_20231204_104819
+2023/12/04 10:54:55 - mmengine - INFO - Evaluating bbox...
+2023/12/04 10:54:55 - mmengine - INFO - bbox_mAP_copypaste: 0.536 0.945 0.538 -1.000 0.521 0.602
+2023/12/04 10:54:55 - mmengine - INFO - Epoch(val) [31][4/4]    coco/bbox_mAP: 0.5360  coco/bbox_mAP_50: 0.9450  coco/bbox_mAP_75: 0.5380  coco/bbox_mAP_s: -1.0000  coco/bbox_mAP_m: 0.5210  coco/bbox_mAP_l: 0.6020  data_time: 0.1100  time: 0.1653
+2023/12/04 10:54:58 - mmengine - INFO - Epoch(train) [32][ 5/19]  base_lr: 3.4818e-05 lr: 3.4818e-05  eta: 0:01:28  time: 0.4372  data_time: 0.2404  memory: 1420  loss: 0.7135  loss_cls: 0.2864  loss_bbox: 0.4271
+2023/12/04 10:55:00 - mmengine - INFO - Epoch(train) [32][10/19]  base_lr: 3.3282e-05 lr: 3.3282e-05  eta: 0:01:25  time: 0.4227  data_time: 0.2268  memory: 1420  loss: 0.7133  loss_cls: 0.2848  loss_bbox: 0.4285
+2023/12/04 10:55:02 - mmengine - INFO - Epoch(train) [32][15/19]  base_lr: 3.1761e-05 lr: 3.1761e-05  eta: 0:01:22  time: 0.4139  data_time: 0.2166  memory: 1420  loss: 0.7090  loss_cls: 0.2822  loss_bbox: 0.4268
+2023/12/04 10:55:03 - mmengine - INFO - Exp name: rtmdet_tiny_1xb4-20e_tire_20231204_104819
+2023/12/04 10:55:04 - mmengine - INFO - Evaluating bbox...
+2023/12/04 10:55:04 - mmengine - INFO - bbox_mAP_copypaste: 0.505 0.945 0.434 -1.000 0.489 0.562
+2023/12/04 10:55:04 - mmengine - INFO - Epoch(val) [32][4/4]    coco/bbox_mAP: 0.5050  coco/bbox_mAP_50: 0.9450  coco/bbox_mAP_75: 0.4340  coco/bbox_mAP_s: -1.0000  coco/bbox_mAP_m: 0.4890  coco/bbox_mAP_l: 0.5620  data_time: 0.1038  time: 0.1529
+2023/12/04 10:55:06 - mmengine - INFO - Epoch(train) [33][ 5/19]  base_lr: 2.9069e-05 lr: 2.9069e-05  eta: 0:01:17  time: 0.4191  data_time: 0.2226  memory: 1420  loss: 0.7119  loss_cls: 0.2843  loss_bbox: 0.4277
+2023/12/04 10:55:09 - mmengine - INFO - Epoch(train) [33][10/19]  base_lr: 2.7603e-05 lr: 2.7603e-05  eta: 0:01:15  time: 0.4308  data_time: 0.2338  memory: 1420  loss: 0.7229  loss_cls: 0.2903  loss_bbox: 0.4326
+2023/12/04 10:55:11 - mmengine - INFO - Epoch(train) [33][15/19]  base_lr: 2.6162e-05 lr: 2.6162e-05  eta: 0:01:12  time: 0.4231  data_time: 0.2259  memory: 1420  loss: 0.7167  loss_cls: 0.2867  loss_bbox: 0.4300
+2023/12/04 10:55:12 - mmengine - INFO - Exp name: rtmdet_tiny_1xb4-20e_tire_20231204_104819
+2023/12/04 10:55:13 - mmengine - INFO - Evaluating bbox...
+2023/12/04 10:55:13 - mmengine - INFO - bbox_mAP_copypaste: 0.508 0.933 0.465 -1.000 0.490 0.573
+2023/12/04 10:55:13 - mmengine - INFO - Epoch(val) [33][4/4]    coco/bbox_mAP: 0.5080  coco/bbox_mAP_50: 0.9330  coco/bbox_mAP_75: 0.4650  coco/bbox_mAP_s: -1.0000  coco/bbox_mAP_m: 0.4900  coco/bbox_mAP_l: 0.5730  data_time: 0.1092  time: 0.1575
+2023/12/04 10:55:16 - mmengine - INFO - Epoch(train) [34][ 5/19]  base_lr: 2.3638e-05 lr: 2.3638e-05  eta: 0:01:07  time: 0.4249  data_time: 0.2286  memory: 1420  loss: 0.7308  loss_cls: 0.2928  loss_bbox: 0.4380
+2023/12/04 10:55:17 - mmengine - INFO - Epoch(train) [34][10/19]  base_lr: 2.2279e-05 lr: 2.2279e-05  eta: 0:01:04  time: 0.4124  data_time: 0.2134  memory: 1420  loss: 0.7262  loss_cls: 0.2918  loss_bbox: 0.4344
+2023/12/04 10:55:19 - mmengine - INFO - Epoch(train) [34][15/19]  base_lr: 2.0954e-05 lr: 2.0954e-05  eta: 0:01:01  time: 0.3940  data_time: 0.1919  memory: 1420  loss: 0.7276  loss_cls: 0.2914  loss_bbox: 0.4362
+2023/12/04 10:55:21 - mmengine - INFO - Exp name: rtmdet_tiny_1xb4-20e_tire_20231204_104819
+2023/12/04 10:55:21 - mmengine - INFO - Evaluating bbox...
+2023/12/04 10:55:22 - mmengine - INFO - bbox_mAP_copypaste: 0.542 0.942 0.575 -1.000 0.541 0.590
+2023/12/04 10:55:22 - mmengine - INFO - Epoch(val) [34][4/4]    coco/bbox_mAP: 0.5420  coco/bbox_mAP_50: 0.9420  coco/bbox_mAP_75: 0.5750  coco/bbox_mAP_s: -1.0000  coco/bbox_mAP_m: 0.5410  coco/bbox_mAP_l: 0.5900  data_time: 0.1106  time: 0.1643
+2023/12/04 10:55:24 - mmengine - INFO - Epoch(train) [35][ 5/19]  base_lr: 1.8660e-05 lr: 1.8660e-05  eta: 0:00:56  time: 0.4117  data_time: 0.2102  memory: 1420  loss: 0.7270  loss_cls: 0.2948  loss_bbox: 0.4322
+2023/12/04 10:55:26 - mmengine - INFO - Epoch(train) [35][10/19]  base_lr: 1.7441e-05 lr: 1.7441e-05  eta: 0:00:54  time: 0.4117  data_time: 0.2075  memory: 1420  loss: 0.7276  loss_cls: 0.2954  loss_bbox: 0.4322
+2023/12/04 10:55:28 - mmengine - INFO - Epoch(train) [35][15/19]  base_lr: 1.6263e-05 lr: 1.6263e-05  eta: 0:00:51  time: 0.4068  data_time: 0.2002  memory: 1420  loss: 0.7359  loss_cls: 0.2984  loss_bbox: 0.4374
+2023/12/04 10:55:30 - mmengine - INFO - Exp name: rtmdet_tiny_1xb4-20e_tire_20231204_104819
+2023/12/04 10:55:30 - mmengine - INFO - Saving checkpoint at 35 epochs
+2023/12/04 10:55:32 - mmengine - INFO - Evaluating bbox...
+2023/12/04 10:55:32 - mmengine - INFO - bbox_mAP_copypaste: 0.523 0.938 0.524 -1.000 0.503 0.594
+2023/12/04 10:55:32 - mmengine - INFO - Epoch(val) [35][4/4]    coco/bbox_mAP: 0.5230  coco/bbox_mAP_50: 0.9380  coco/bbox_mAP_75: 0.5240  coco/bbox_mAP_s: -1.0000  coco/bbox_mAP_m: 0.5030  coco/bbox_mAP_l: 0.5940  data_time: 0.1138  time: 0.2032
+2023/12/04 10:55:35 - mmengine - INFO - Epoch(train) [36][ 5/19]  base_lr: 1.4256e-05 lr: 1.4256e-05  eta: 0:00:46  time: 0.4204  data_time: 0.2150  memory: 1420  loss: 0.7343  loss_cls: 0.2986  loss_bbox: 0.4358
+2023/12/04 10:55:37 - mmengine - INFO - Epoch(train) [36][10/19]  base_lr: 1.3207e-05 lr: 1.3207e-05  eta: 0:00:44  time: 0.4152  data_time: 0.2066  memory: 1420  loss: 0.7330  loss_cls: 0.2967  loss_bbox: 0.4363
+2023/12/04 10:55:39 - mmengine - INFO - Epoch(train) [36][15/19]  base_lr: 1.2207e-05 lr: 1.2207e-05  eta: 0:00:41  time: 0.4129  data_time: 0.2040  memory: 1420  loss: 0.7319  loss_cls: 0.2994  loss_bbox: 0.4325
+2023/12/04 10:55:40 - mmengine - INFO - Exp name: rtmdet_tiny_1xb4-20e_tire_20231204_104819
+2023/12/04 10:55:41 - mmengine - INFO - Evaluating bbox...
+2023/12/04 10:55:41 - mmengine - INFO - bbox_mAP_copypaste: 0.530 0.942 0.533 -1.000 0.504 0.606
+2023/12/04 10:55:41 - mmengine - INFO - Epoch(val) [36][4/4]    coco/bbox_mAP: 0.5300  coco/bbox_mAP_50: 0.9420  coco/bbox_mAP_75: 0.5330  coco/bbox_mAP_s: -1.0000  coco/bbox_mAP_m: 0.5040  coco/bbox_mAP_l: 0.6060  data_time: 0.1193  time: 0.1674
+2023/12/04 10:55:44 - mmengine - INFO - Epoch(train) [37][ 5/19]  base_lr: 1.0536e-05 lr: 1.0536e-05  eta: 0:00:36  time: 0.4241  data_time: 0.2195  memory: 1420  loss: 0.7283  loss_cls: 0.2980  loss_bbox: 0.4303
+2023/12/04 10:55:45 - mmengine - INFO - Epoch(train) [37][10/19]  base_lr: 9.6820e-06 lr: 9.6820e-06  eta: 0:00:34  time: 0.4273  data_time: 0.2240  memory: 1420  loss: 0.7305  loss_cls: 0.2986  loss_bbox: 0.4318
+2023/12/04 10:55:47 - mmengine - INFO - Epoch(train) [37][15/19]  base_lr: 8.8836e-06 lr: 8.8836e-06  eta: 0:00:31  time: 0.4168  data_time: 0.2143  memory: 1420  loss: 0.7377  loss_cls: 0.3011  loss_bbox: 0.4366
+2023/12/04 10:55:49 - mmengine - INFO - Exp name: rtmdet_tiny_1xb4-20e_tire_20231204_104819
+2023/12/04 10:55:50 - mmengine - INFO - Evaluating bbox...
+2023/12/04 10:55:50 - mmengine - INFO - bbox_mAP_copypaste: 0.535 0.937 0.545 -1.000 0.516 0.603
+2023/12/04 10:55:50 - mmengine - INFO - Epoch(val) [37][4/4]    coco/bbox_mAP: 0.5350  coco/bbox_mAP_50: 0.9370  coco/bbox_mAP_75: 0.5450  coco/bbox_mAP_s: -1.0000  coco/bbox_mAP_m: 0.5160  coco/bbox_mAP_l: 0.6030  data_time: 0.1134  time: 0.1660
+2023/12/04 10:55:53 - mmengine - INFO - Epoch(train) [38][ 5/19]  base_lr: 7.5899e-06 lr: 7.5899e-06  eta: 0:00:26  time: 0.4394  data_time: 0.2396  memory: 1420  loss: 0.7377  loss_cls: 0.3077  loss_bbox: 0.4300
+2023/12/04 10:55:55 - mmengine - INFO - Epoch(train) [38][10/19]  base_lr: 6.9530e-06 lr: 6.9530e-06  eta: 0:00:24  time: 0.4306  data_time: 0.2329  memory: 1420  loss: 0.7286  loss_cls: 0.3057  loss_bbox: 0.4229
+2023/12/04 10:55:57 - mmengine - INFO - Epoch(train) [38][15/19]  base_lr: 6.3760e-06 lr: 6.3760e-06  eta: 0:00:21  time: 0.4189  data_time: 0.2194  memory: 1420  loss: 0.7399  loss_cls: 0.3067  loss_bbox: 0.4332
+2023/12/04 10:55:58 - mmengine - INFO - Exp name: rtmdet_tiny_1xb4-20e_tire_20231204_104819
+2023/12/04 10:55:59 - mmengine - INFO - Evaluating bbox...
+2023/12/04 10:55:59 - mmengine - INFO - bbox_mAP_copypaste: 0.518 0.940 0.495 -1.000 0.497 0.586
+2023/12/04 10:55:59 - mmengine - INFO - Epoch(val) [38][4/4]    coco/bbox_mAP: 0.5180  coco/bbox_mAP_50: 0.9400  coco/bbox_mAP_75: 0.4950  coco/bbox_mAP_s: -1.0000  coco/bbox_mAP_m: 0.4970  coco/bbox_mAP_l: 0.5860  data_time: 0.1116  time: 0.1602
+2023/12/04 10:56:02 - mmengine - INFO - Epoch(train) [39][ 5/19]  base_lr: 5.4914e-06 lr: 5.4914e-06  eta: 0:00:16  time: 0.4359  data_time: 0.2410  memory: 1420  loss: 0.7314  loss_cls: 0.3054  loss_bbox: 0.4260
+2023/12/04 10:56:04 - mmengine - INFO - Epoch(train) [39][10/19]  base_lr: 5.0869e-06 lr: 5.0869e-06  eta: 0:00:14  time: 0.4306  data_time: 0.2324  memory: 1420  loss: 0.7389  loss_cls: 0.3093  loss_bbox: 0.4296
+2023/12/04 10:56:06 - mmengine - INFO - Epoch(train) [39][15/19]  base_lr: 4.7456e-06 lr: 4.7456e-06  eta: 0:00:11  time: 0.4310  data_time: 0.2310  memory: 1420  loss: 0.7486  loss_cls: 0.3116  loss_bbox: 0.4370
+2023/12/04 10:56:08 - mmengine - INFO - Exp name: rtmdet_tiny_1xb4-20e_tire_20231204_104819
+2023/12/04 10:56:09 - mmengine - INFO - Evaluating bbox...
+2023/12/04 10:56:09 - mmengine - INFO - bbox_mAP_copypaste: 0.544 0.943 0.594 -1.000 0.531 0.609
+2023/12/04 10:56:09 - mmengine - INFO - Epoch(val) [39][4/4]    coco/bbox_mAP: 0.5440  coco/bbox_mAP_50: 0.9430  coco/bbox_mAP_75: 0.5940  coco/bbox_mAP_s: -1.0000  coco/bbox_mAP_m: 0.5310  coco/bbox_mAP_l: 0.6090  data_time: 0.1192  time: 0.1744
+2023/12/04 10:56:09 - mmengine - INFO - Switch pipeline now!
+2023/12/04 10:56:11 - mmengine - INFO - Epoch(train) [40][ 5/19]  base_lr: 4.2918e-06 lr: 4.2918e-06  eta: 0:00:07  time: 0.4300  data_time: 0.2306  memory: 1420  loss: 0.7202  loss_cls: 0.3005  loss_bbox: 0.4197
+2023/12/04 10:56:12 - mmengine - INFO - Epoch(train) [40][10/19]  base_lr: 4.1298e-06 lr: 4.1298e-06  eta: 0:00:04  time: 0.4024  data_time: 0.2027  memory: 1420  loss: 0.7288  loss_cls: 0.3103  loss_bbox: 0.4184
+2023/12/04 10:56:13 - mmengine - INFO - Epoch(train) [40][15/19]  base_lr: 4.0325e-06 lr: 4.0325e-06  eta: 0:00:02  time: 0.3680  data_time: 0.1692  memory: 1420  loss: 0.7084  loss_cls: 0.2955  loss_bbox: 0.4130
+2023/12/04 10:56:14 - mmengine - INFO - Exp name: rtmdet_tiny_1xb4-20e_tire_20231204_104819
+2023/12/04 10:56:14 - mmengine - INFO - Saving checkpoint at 40 epochs
+2023/12/04 10:56:16 - mmengine - INFO - Evaluating bbox...
+2023/12/04 10:56:16 - mmengine - INFO - bbox_mAP_copypaste: 0.534 0.943 0.567 -1.000 0.500 0.633
+2023/12/04 10:56:16 - mmengine - INFO - Epoch(val) [40][4/4]    coco/bbox_mAP: 0.5340  coco/bbox_mAP_50: 0.9430  coco/bbox_mAP_75: 0.5670  coco/bbox_mAP_s: -1.0000  coco/bbox_mAP_m: 0.5000  coco/bbox_mAP_l: 0.6330  data_time: 0.1179  time: 0.1909
